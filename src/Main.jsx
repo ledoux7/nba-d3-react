@@ -1,0 +1,60 @@
+import React from 'react'
+import { Switch, Route } from 'react-router-dom'
+import Home from './views/Home'
+import Table from './views/Table'
+// import Scatter from './components/Scatter'
+import Bars from './views/Bars'
+import Filter from './views/Filtering'
+import Better from './views/Better'
+import Slider from './views/Slider'
+import Test from './views/Test'
+import Just from './views/Just'
+
+import sibs from './views/sibs'
+import Scatter from './views/ScatterView'
+import Axistest from './views/Axistest'
+import Shotchart from './views/ShotchartView'
+import myShotchart from './views/myShotchartView'
+import grid from './views/Grid'
+
+
+
+
+
+
+
+
+
+
+
+const Main = () => (
+  <main>
+    <Switch>
+      <Route exact path='/' component={Home}/>     
+      <Route path='/table' component={Table}/>
+      <Route path='/filter' component={Filter}/>
+      <Route path='/barchart' component={Better}/>
+      <Route path='/slider' component={Slider}/>
+      <Route path='/test' component={Axistest}/>
+      <Route path='/bar' component={Just}/>
+      <Route path='/sibs' component={sibs}/>
+      <Route path='/scatter' component={Scatter}/>
+      <Route path='/shotchart' component={Shotchart}/>
+      <Route path='/my' component={myShotchart}/>
+      <Route path='/grid' component={grid}/>
+      
+
+
+      {/* <Route path='/scatter' component={Scatter}/> */}
+
+
+
+
+
+
+    </Switch>
+  </main>
+  
+)
+
+export default Main
