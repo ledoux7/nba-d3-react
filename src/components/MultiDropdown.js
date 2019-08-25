@@ -41,7 +41,7 @@ class DropdownMultiple extends Component {
 
 	static getDerivedStateFromProps(nextProps) {
 
-		const uniqNames = [...new Set(nextProps.list.filter(function (a) { return a.selected; }).map(d => d.PLAYER_NAME))]
+		const uniqNames = [...new Set(nextProps.list.filter(function (a) { return a[nextProps.selCol]; }).map(d => d.PLAYER_NAME))]
 		// const selcetedids = [...new Set(nextProps.list.filter(function (a) { return a.selected; }).map(d => d.PLAYER_ID))]
 
         // nextProps.uniqList= nextProps.uniqList.filter((person) => selcetedids.includes(person.id))
@@ -71,7 +71,7 @@ class DropdownMultiple extends Component {
 	}
 
 	render() {
-		const { list, toggleItem, uniqList } = this.props
+		const { list, toggleItem, uniqList,selCol } = this.props
 		const { listOpen, headerTitle } = this.state
 
 
@@ -108,9 +108,10 @@ class DropdownMultiple extends Component {
 				{listOpen && <ul className="dd-list" onClick={e => e.stopPropagation()}>
 					{uniqList.map((item) => (
 
-						<li className="dd-list-item" key={item.key} onClick={() => toggleItem(item.id, item.key,uniqList, item.listid)}>
+						<li className="dd-list-item" key={item.key} onClick={() => toggleItem(item.id, item.key,uniqList,item.listid,selCol)}>
+							{/* toggleItem(item.id, item.key,uniqList, item.listid,selCol) */}
 
-							{item["option"]} {item.selected && <FontAwesomeIcon icon="check" size="sm" color="#ccc" />}
+							{item["option"]} {item[selCol] && <FontAwesomeIcon icon="check" size="sm" color="#ccc" />}
 
 						</li>
 

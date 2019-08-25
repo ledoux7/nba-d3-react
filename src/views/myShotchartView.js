@@ -54,41 +54,12 @@ class Main1 extends Component {
 			left: 0,
 			right: 35,
 
-			left1: 0,
-			right1: 15,
+			distL: 0,
+			distR: 35,
 
 			left2: 0,
-			right2: 40,
-			location: [
-				{
-					id: 0,
-					title: 'New York',
-					selected: false,
-					key: 'location'
-				},
-				{
-					id: 1,
-					title: 'Dublin',
-					selected: false,
-					key: 'location'
-				}
+			right2: 40
 
-			],
-
-			fruit: [
-				{
-					id: 0,
-					title: 'Apple',
-					selected: false,
-					key: 'fruit'
-				},
-				{
-					id: 1,
-					title: 'Orange',
-					selected: false,
-					key: 'fruit'
-				}
-			]
 		};
 		this.handleClick = this.handleClick.bind(this);
 
@@ -126,6 +97,8 @@ class Main1 extends Component {
 
 		players.map(i => i.firstname = "Nepal");
 		players.map(i => i.key = "players");
+		players.map(i => i.selected = true);
+
 
 		players.map((p, i) => {
 			if (p.PLAYER_NAME === "Stephen Curry") { p.selected = true; }
@@ -194,10 +167,10 @@ class Main1 extends Component {
 		})
 	}
 
-	handleChangeYear(year1, year2) {
+	handleDistChange(x, y) {
 		this.setState({
-			left1: year1,
-			right1: year2,
+			distL: x,
+			distR: y
 
 		})
 	}
@@ -209,7 +182,7 @@ class Main1 extends Component {
 		})
 	}
 
-	handleDistChange(year1, year2) {
+	handleDistChange1(year1, year2) {
 		this.setState({
 			left: year1,
 			right: year2,
@@ -279,10 +252,10 @@ class Main1 extends Component {
 		var ab = players.filter((p) => (p.selected == true))
 
 
-		ab = ab.filter((p) => (p.SHOT_DIST >= this.state.left) && (p.SHOT_DIST <= this.state.right))
+		ab = ab.filter((p) => (p.SHOT_DIST >= this.state.distL) && (p.SHOT_DIST <= this.state.distR))
 
-		ab = ab.filter((p) => (((p.LOC_X+250)/10) >= this.state.left1) && (((p.LOC_X+250)/10) <= this.state.right1))
-		ab = ab.filter((p) => (((p.LOC_Y+50)/10) >= this.state.left2) && (((p.LOC_Y+50)/10) <= this.state.right2))
+		// ab = ab.filter((p) => (((p.LOC_X+250)/10) >= this.state.distL) && (((p.LOC_X+250)/10) <= this.state.distR))
+		// ab = ab.filter((p) => (((p.LOC_Y+50)/10) >= this.state.left2) && (((p.LOC_Y+50)/10) <= this.state.right2))
 
 
 
@@ -328,22 +301,94 @@ class Main1 extends Component {
 			// <div className="hmmw" style={{ background: '#57667B' }}>
 
 			<div className="hmmw" >
-
 				<h1>Hello bugs </h1>
-				<div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "200px" }}>
+				<div>
 
-					<MultiDropdown
-						titleHelper="Player"
-						title="Select Players"
-						col="PLAYER_NAME"
-						uid="PLAYER_ID"
+					<h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "100px" }}>
+						Player
+					</h2>
+					<div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "100px", "margin-top": "10px"  }}>  
+						<div>
 
-						list={this.state.players}
-						uniqList={uniqList}
-						toggleItem={this.toggleSelected}
-					/>
-					{/* {wholePts} */}
+						<MultiDropdown
+							titleHelper="Player"
+							title="Select Players"
+							col="PLAYER_NAME"
+							uid="PLAYER_ID"
+
+							list={this.state.players}
+							uniqList={uniqList}
+							toggleItem={this.toggleSelected}
+						/>
+						</div>
+						
+						{/* {wholePts} */}
+					</div>
 				</div>
+
+				
+				<div>
+
+					<h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "100px", "margin-top": "10px"  }}>
+						Distance
+					</h2>
+					<div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "80px" }}>  
+						<div>
+
+						<RangeSlider onChangeYear={this.handleDistChange.bind(this)}
+						data={dist} 
+						handle1={"handle3"}
+						handle2={"handle4"}
+						sGroup={"test"}
+						label={"Distance"}
+
+						left={this.state.distL}
+						right={this.state.distR}
+						width={500}
+						height={150}
+					/>
+						</div>
+						
+						{/* {wholePts} */}
+					</div>
+				</div>
+
+
+				<div >
+					<div style={{ display: 'flex', justifyContent: "flex-start","align-items":"flex-start", "margin-left": "100px", "margin-top": "10px"  }}></div>
+					<h2 style={{ width:300}} >
+						Toggle Chart Mode
+					</h2>
+					<h2 style={{ width:300}} >
+						Hex Bin
+					</h2>
+					<div className="break"></div>
+					<div className="asd" style={{ display: 'flex',"flex-direction":"column", justifyContent: "flex-start", "margin-left": "100px" }}>  
+
+
+						<button onClick={this.handleClick} className="white">
+							{this.state.isToggleOn ? 'Scatter' : 'Hexbin'}
+						</button>
+						
+						{/* {wholePts} */}
+
+						<div style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "100px", "margin-top": "0px"  }}>
+						<SingleSlider onChangeYear={this.handleBinChange.bind(this)}
+						data={binrange}
+						handle={"handle13"}
+
+						left={this.state.minCount}
+						// right={this.state.minCount}
+						width={300}
+						height={40}
+					/>
+						</div>
+						
+					</div>
+
+	
+				</div>
+				
 
 
 
@@ -371,37 +416,29 @@ class Main1 extends Component {
 				</div>
 				<div><br></br></div>
 
-				<div style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "200px", background: '#57667B' }}>
+				<div style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "100px", background: '#57667B' }}>
 
-					{/* <SingleSlider onChangeYear={this.handleBinChange.bind(this)}
-						data={binrange}
-						handle={"handle3"}
+		
 
-						left={this.state.minCount}
-						// right={this.state.minCount}
-						width={500}
-						height={150}
-					/>
+					
 
-					*/}
-
-					<RangeSlider onChangeYear={this.handleChangeYear.bind(this)}
-						data={wholeAst} 
+					{/* <RangeSlider onChangeYear={this.handleDistChange.bind(this)}
+						data={dist} 
 						handle1={"handle3"}
 						handle2={"handle4"}
 						sGroup={"test"}
+						label={"Distance"}
 
-
-						left={this.state.left1}
-						right={this.state.right1}
+						left={this.state.distL}
+						right={this.state.distR}
 						width={500}
 						height={150}
-					/>
+					/> */}
 
 
 
 
-					{this.state.left1}:{this.state.right1} 
+					{/* {this.state.distL}:{this.state.distR}  */}
 
 
 
@@ -410,62 +447,29 @@ class Main1 extends Component {
 
 				<div style={{ display: 'flex', justifyContent: "center" }}>
 
-					<button onClick={this.handleClick}>
-						{this.state.isToggleOn ? 'Hexbin' : 'Scatter'}
-					</button>
+					
 				</div>
 
-				<div>
-
-				<Container>
-					<Col>
-					<VertSlider onChangeYear={this.handleChangeYear1.bind(this)}
-						data={wholePts} 
-						// data={testt} 
-						
-						handle1={"handle8"}
-						handle2={"handle9"}
-						sGroup={"test2"}
-
-
-						left={this.state.left2}
-						right={this.state.right2}
-						width={210}
-						height={600}
-					/> {this.state.right2} 
-					</Col>
-
-					<Shotchart 
-                                data={abc}
-                                //  xdata={xloc} ydata={yloc}
-                                playerId={this.props.playerId}
-                                minCount={this.state.minCount}
-                                chartType={this.state.chartType}
-                                displayToolTips={this.state.displayToolTips}
-                                />
-					<Col>
-					
-					
-					</Col>
-
-				</Container>
-				
-				
-
+				{/* <div style={{ width: 100,background: '#23667B'}} >
 
 				
-				
-				
-				</div>
-				<div><br></br><br></br></div>
+				</div> */}
+				{/* <div><br></br><br></br></div> */}
 
 
 
 				<div>
 			
-
-					{/* <Shotchart data={abc} xdata={xloc} ydata={yloc} size={[600, 450] }/>  */}
-
+				<Shotchart 
+                                data={abc}
+                                //  xdata={xloc} ydata={yloc}
+                                playerId={this.props.playerId}
+                                minCount={this.state.minCount}
+                                chartType={this.state.chartType}
+								displayToolTips={this.state.displayToolTips}
+								width={500}
+                                />
+	
 					
 
 				</div>
@@ -480,7 +484,7 @@ class Main1 extends Component {
                         height={150}
 						/>  */}
 
-				{this.state.left}
+				{/* {this.state.left} */}
 
 
 

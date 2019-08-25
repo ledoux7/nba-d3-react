@@ -27,8 +27,14 @@ import Shotchart from "../graphs/myShotChart"
 
 import {Container,Col,Row} from 'react-bootstrap'
 
+
+import FeatureFour from "../graphs/Bubble"
+
 const ResponsiveReactGridLayout = WidthProvider(ResponsiveGridLayout );
 const originalLayouts = getFromLS("layouts") || {};
+
+
+
 
 
 class Main1 extends Component {
@@ -94,7 +100,12 @@ class Main1 extends Component {
 		// })
 		// players.map((p, i) => {
 		// 	if (p.PLAYER_NAME === "Giannis") { p["selectedP2"] = true; }
-		// })
+        // })
+        
+        players.map((p, i) => p.selectedP1 = true);
+		players.map((p, i) => p.selectedP2 = true);
+        
+
 		players.map((p, i) => p.id = p.PLAYER_ID);
 		players.map((p, i) => p.shotid = i);
 
@@ -109,8 +120,8 @@ class Main1 extends Component {
 		var uniqList = players.map((p, index) => ({
 			option: p["PLAYER_NAME"],
 			id: p["PLAYER_ID"],
-			selectedP1: false,
-			selectedP2: false,
+			selectedP1: true,
+			selectedP2: true,
 			key: "players"
 		}))
 
@@ -337,7 +348,7 @@ class Main1 extends Component {
 		var testt = [0,124,300]
 
 		
-		var r1h = 8
+		var r1h = 6
 		var r2h = 10
 		var fullwidth = 10
 		var halfwidth = fullwidth/2
@@ -435,89 +446,22 @@ class Main1 extends Component {
       
                 <div key="2" style={{ background: '#455162' }} data-grid={{ w: 5, h: r1h, x: 5, y: 0, minW: 2, minH: 1, static: true  }}>
       
-				{/* <div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px", "margin-top": "10px"  }}>   */}
-				<h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px"}}>
-						Player
-					</h2>
-					<div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px", "margin-top": "10px"  }}>  
-						<div style={{ }}>
-						{/* <div> */}
-						<MultiDropdown
-							titleHelper="Player"
-							title="Select Players"
-							col="PLAYER_NAME"
-							uid="PLAYER_ID"
-							selCol={"selectedP2"}
 
-							list={this.state.players}
-							uniqList={uniqList}
-							toggleItem={this.toggleSelected}
-							/>
-
-						</div>
-
-			
-					{/* </div> */}
-						
-						{/* {wholePts} */}
-					</div>
-					<h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px", "margin-top": "10px"  }}>
-						Distance
-					</h2>
-					<div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "-10px" }}>  
-						<div>
-
-						<RangeSlider onChangeYear={this.handleDistChange2.bind(this)}
-						data={dist} 
-						handle1={"handle123"}
-						handle2={"handle124"}
-						sGroup={"test232"}
-						label={"Distance"}
-
-						left={this.state.dist2L}
-						right={this.state.dist2R}
-						width={500}
-						height={150}
-					/>
-						</div>
-						
-						{/* {wholePts} */}
-					</div>
       
 
 
       			</div>
 
-				<div  key="3" style={{ background: '#455162' }} data-grid={{ w: 2.5, h:12 , x: 2.5, y: r1h, minW: 2, minH: 1, static: true  }}>
-					<h2>P1</h2>
-					{/* <div style={{display: 'flex', justifyContent: "center", "margin-left": "0px", background: '#135162' }}> */}
-					<Shotchart 
-						data={abc}
-						//  xdata={xloc} ydata={yloc}
-						playerId={this.props.playerId}
-						minCount={this.state.minCount}
-						chartType={this.state.chartType}
-						displayToolTips={this.state.displayToolTips}
-						width={400}
-						namee={"p1"}
-						/>
-					{/* </div> */}
-					
+				<div  key="3" style={{ background: '#455162' }} data-grid={{ w: 5, h:12 , x: 0, y: r1h, minW: 2, minH: 1, static: true  }}>
+					{/* <h2>P1</h2> */}
+
+					<FeatureFour data={[5,10,1,3]} size={[500,500]}/> 
 
 
 				</div>
 				<div  key="4" style={{ background: '#455162' }} data-grid={{ w: 2.5, h:12 , x: 7.5, y: r1h, minW: 2, minH: 1, static: true  }}>
 					<h2>P2</h2>
-					<Shotchart 
-						data={deff}
-						//  xdata={xloc} ydata={yloc}
-						playerId={this.props.playerId}
-						minCount={this.state.minCount}
-						chartType={this.state.chartType}
-						displayToolTips={this.state.displayToolTips}
-						width={400}
-						namee={"p2"}
-						/>
+					
 
 
 				</div>

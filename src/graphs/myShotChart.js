@@ -56,7 +56,7 @@ export class ShotChart extends React.Component {
 	const courtSelection = d3.select("#shot-chart"+namee)
 	// without this line, all updates on court would be ineffect only after changing chartType
 	courtSelection.html('')
-	const chart_court = court().width(500)
+	const chart_court = court().width(this.props.width)
 	const chart_shots = shots()
 						.shotRenderThreshold(this.props.minCount)
 						.displayToolTips(this.props.displayToolTips)
@@ -68,7 +68,7 @@ export class ShotChart extends React.Component {
   }
   render() {
     return (
-      <div id={"shot-chart"+this.props.namee} className="sc"></div>
+      <div id={"shot-chart"+this.props.namee} className="sc" ></div>
     );
   }
 }

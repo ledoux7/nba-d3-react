@@ -106,7 +106,7 @@ p {
   text-align:center;
 }
 .App h1 {
-  padding: 10px;
+  padding: 5px;
   font-size: 2.8rem;
   text-align:center;
   font-weight:bold;
@@ -159,6 +159,33 @@ p {
 }
 
 
+button {
+  /* margin: 30px; */
+  font-size: 18px;
+  height: 45px;
+  width: 120px;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 1px 1px 0px 2px rgba (0,0,0,0.3);
+  /* background: rgb(141,217,252); */
+  background:#FFF;
+
+   cursor: pointer;
+ }
+ 
+ .red {
+   background: red;
+ }
+ 
+ .green {
+   background: green;
+ }
+ 
+ .yellow {
+   background: yellow;
+ }
+
+
 
 
 /* svg circle {
@@ -198,8 +225,9 @@ p {
       -ms-user-select: none;
           user-select: none;
   position: relative;
-  min-width:180px;
+  min-width:220px;
   padding:0px;
+  /* margin-left: 10px */
 }
 
 .dd-header {
@@ -218,6 +246,7 @@ p {
   cursor: default;
   position: relative;
   background-color: #fff;
+  font-size: 18px;
 }
 .dd-header span {
   margin-right: 10px;

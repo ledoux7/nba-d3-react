@@ -273,23 +273,26 @@ class Main1 extends Component {
                 <div><br></br></div>
 
 
-                    <div>
+				<div >
 
-                        {/* <Shotchart data={abc} xdata={xloc} ydata={yloc} size={[600, 450] }/>  */}
+					{/* <Shotchart data={abc} xdata={xloc} ydata={yloc} size={[600, 450] }/>  */}
 
-                        <Shotchart 
-                                data={abc}
-                                //  xdata={xloc} ydata={yloc}
-                                playerId={this.props.playerId}
-                                minCount={this.state.minCount}
-                                chartType={this.state.chartType}
-                                displayToolTips={this.state.displayToolTips}
-                                />
+					<Shotchart 
+							data={abc}
+							//  xdata={xloc} ydata={yloc}
+							playerId={this.props.playerId}
+							minCount={this.state.minCount}
+							chartType={this.state.chartType}
+							displayToolTips={this.state.displayToolTips}
+							/>
 
-                    </div>
-                
+					
 
-                    <div>
+				</div>
+			
+
+				<div>
+					
 					{
 						// this.state.players.map(post => (
 						this.state.players.slice(0, 15).map(post => (

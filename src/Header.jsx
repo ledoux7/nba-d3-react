@@ -21,10 +21,10 @@ class Navigation extends React.Component {
                         <Nav className="mr-auto" fill="true" variant="pills">
                             <Nav.Link href="/">Home</Nav.Link>
                             <Nav.Link href='/filter'>Filter</Nav.Link>
-                            <Nav.Link href='/table'>Table</Nav.Link>
-                            <Nav.Link href='/bar'>Bar</Nav.Link>
+                            {/* <Nav.Link href='/table'>Table</Nav.Link> */}
+                            <Nav.Link href='/bubble'>Bubble</Nav.Link>
                             <Nav.Link href='/test'>test</Nav.Link>
-                            <Nav.Link href='/sibs'>sibs</Nav.Link>
+                            <Nav.Link href='/slider'>Slider</Nav.Link>
                             <Nav.Link href='/scatter'>Scatter</Nav.Link>
                             <Nav.Link href='/shotchart'>Shotchart</Nav.Link>
                             <Nav.Link href='/my'>My Shotchart</Nav.Link>

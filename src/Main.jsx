@@ -16,6 +16,8 @@ import Axistest from './views/Axistest'
 import Shotchart from './views/ShotchartView'
 import myShotchart from './views/myShotchartView'
 import grid from './views/Grid'
+import Bubble from './views/BubbleView'
+
 
 
 
@@ -30,14 +32,16 @@ import grid from './views/Grid'
 const Main = () => (
   <main>
     <Switch>
-      <Route exact path='/' component={Home}/>     
+      {/* <Route exact path='/' component={Home}/>   */}
+      <Route exact path='/' component={grid}/>     
+
       <Route path='/table' component={Table}/>
       <Route path='/filter' component={Filter}/>
       <Route path='/barchart' component={Better}/>
       <Route path='/slider' component={Slider}/>
       <Route path='/test' component={Axistest}/>
-      <Route path='/bar' component={Just}/>
-      <Route path='/sibs' component={sibs}/>
+      <Route path='/bubble' component={Bubble}/>
+      {/* <Route path='/slider' component={sibs}/> */}
       <Route path='/scatter' component={Scatter}/>
       <Route path='/shotchart' component={Shotchart}/>
       <Route path='/my' component={myShotchart}/>

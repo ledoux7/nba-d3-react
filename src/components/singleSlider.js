@@ -132,7 +132,7 @@ class Handle extends React.Component {
 
 
 const SingleSlider = ({ data, onChangeYear, left, right,width,height,handle,label }) => {
-    const margins = { top: 20, right: 30, bottom: 20, left: 30 },
+    const margins = { top: 0, right: 30, bottom: 0, left: 30 },
         svgDimensions = { width: width, height: width };
 
     const minData = d3.min(data), maxData = d3.max(data)
@@ -171,8 +171,8 @@ const SingleSlider = ({ data, onChangeYear, left, right,width,height,handle,labe
 
 
               
-return     <svg width={width} height={155} >
-                <g className={"rangeSliderGroup"+handle} transform={`translate(0,${130})`}>
+return     <svg width={width} height={height} >
+                <g className={"rangeSliderGroup"+handle} transform={`translate(0,${20})`}>
                 <Axis x={0} y={0} scale={xScale2} label={label} type="Bottom" />
                 {/* {RangeBar} */}
                 {/* {RangeBarFilled} */}
