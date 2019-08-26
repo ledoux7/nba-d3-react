@@ -1,67 +1,130 @@
 import React, { Component } from 'react'
 import * as d3 from 'd3-force';
-import _ from 'lodash';
+// import _ from 'lodash';
 
-class ForceGraph extends Component {
+var width = 960;
+var height = 500;
+var force = d3.layout.force()
+  .charge(-300)
+  .linkDistance(50)
+  .size([width, height]);
 
-  constructor() {
-    super()
-    this.state = {nodes: []}
-    this.forceStrength = 0.8
-    this.charge=1
-  }
+// *****************************************************
+// ** d3 functions to manipulate attributes
+// *****************************************************
 
+var enterNode = (selection) => {
+  selection.classed('node', true);
+
+  selection.append('circle')
+    .attr("r", (d) => d.size)
+    .call(force.drag);
+
+  selection.append('text')
+    .attr("x", (d) => d.size + 5)
+    .attr("dy", ".35em")
+    .text((d) => d.key);
+};
+
+var updateNode = (selection) => {
+  selection.attr("transform", (d) => "translate(" + d.x + "," + d.y + ")");
+};
+
+var enterLink = (selection) => {
+  selection.classed('link', true)
+    .attr("stroke-width", (d) => d.size);
+};
+
+var updateLink = (selection) => {
+  selection.attr("x1", (d) => d.source.x)
+    .attr("y1", (d) => d.source.y)
+    .attr("x2", (d) => d.target.x)
+    .attr("y2", (d) => d.target.y);
+};
+
+var updateGraph = (selection) => {
+  selection.selectAll('.node')
+    .call(updateNode);
+  selection.selectAll('.link')
+    .call(updateLink);
+};
+
+// *****************************************************
+// ** Graph and App components
+// *****************************************************
+
+var Graph = React.createClass({
   componentDidMount() {
-    this.updateNodePositions(this.props.nodes)
-  }
+    this.d3Graph = d3.select(ReactDOM.findDOMNode(this.refs.graph));
+    force.on('tick', () => {
+      // after force calculation starts, call updateGraph
+      // which uses d3 to manipulate the attributes,
+      // and React doesn't have to go through lifecycle on each tick
+      this.d3Graph.call(updateGraph);
+    });
+  },
 
-  componentDidUpdate(prevProps, prevState) {
+  shouldComponentUpdate(nextProps) {
+    this.d3Graph = d3.select(ReactDOM.findDOMNode(this.refs.graph));
 
-    if (this.props.nodes != prevProps.nodes) {
-        this.updateNodePositions(this.props.nodes)
-      }
-  }
+    var d3Nodes = this.d3Graph.selectAll('.node')
+      .data(nextProps.nodes, (node) => node.key);
+    d3Nodes.enter().append('g').call(enterNode);
+    d3Nodes.exit().remove();
+    d3Nodes.call(updateNode);
 
-  updateNodePositions = (nodes) => {
+    var d3Links = this.d3Graph.selectAll('.link')
+      .data(nextProps.links, (link) => link.key);
+    d3Links.enter().insert('line', '.node').call(enterLink);
+    d3Links.exit().remove();
+    d3Links.call(updateLink);
 
-    var center = { x: this.props.svgDimensions.width / 2, y: this.props.svgDimensions.height / 2 };
+    // we should actually clone the nodes and links
+    // since we're not supposed to directly mutate
+    // props passed in from parent, and d3's force function
+    // mutates the nodes and links array directly
+    // we're bypassing that here for sake of brevity in example
+    force.nodes(nextProps.nodes).links(nextProps.links);
+    force.start();
 
-    this.simulation = d3.forceSimulation(nodes)  
-      .force('charge', d3.forceManyBody().strength(this.charge))
-      .force("collide", d3.forceCollide(4))
-      .alphaDecay(0.1)
-      .velocityDecay(0.4)
-      .force('x', d3.forceX().strength(this.forceStrength).x(d => d.cx))
-      .force('y', d3.forceY().strength(this.forceStrength).y(d => d.cy))
-
-    this.simulation.on('tick', () => this.setState({nodes}))
-
-  }
+    return false;
+  },
 
   render() {
-
-    const {nodes} = this.state
-
-    var dots = (
-      nodes.map( d =>
-        <circle
-          className={d.driverRef}
-          key={d.id}
-          cx={d.x}
-          cy={d.y}
-          r={d.radius}
-          fill={d.color}
-          opacity='1'
-        />)
-    )
-
     return (
-      <g>
-        {dots}
-      </g>
-    )
+      <svg width={width} height={height}>
+        <g ref='graph' />
+      </svg>
+    );
   }
+});
 
-}
+var App = React.createClass({
+  getInitialState() {
+    return {
+      nodes: [],
+      links: [],
+    };
+  },
 
-export default ForceGraph;
+  componentDidMount() {
+    this.updateData();
+  },
+
+  updateData() {
+    // randomData is loaded in from external file generate_data.js
+    // and returns an object with nodes and links
+    var newState = randomData(this.state.nodes, width, height);
+    this.setState(newState);
+  },
+
+  render() {
+    return (
+      <div>
+        <div className="update" onClick={this.updateData}>update</div>
+        <Graph nodes={this.state.nodes} links={this.state.links} />
+      </div>
+    );
+  },
+});
+
