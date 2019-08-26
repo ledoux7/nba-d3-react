@@ -104,7 +104,7 @@ class Slice extends React.Component {
 		let {value,piece, label, fill, innerRadius = 0, outerRadius, cornerRadius, padAngle, ...props} = this.props;
 		if (this.state.isSelected) 
 		{
-			outerRadius *= 1.1;
+			outerRadius *= 1.11;
 		}
 		let arc = d3.arc()
 		.innerRadius(innerRadius)
