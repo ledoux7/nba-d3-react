@@ -45,7 +45,7 @@ class Slice extends React.Component {
 			
 			});
 
-			this.props.func(-this.props.piece)
+			this.props.func(-this.props.piece,this.props.label, 0)
 		}
 		else{
 			this.setState({
@@ -58,7 +58,7 @@ class Slice extends React.Component {
 			});
 			if (this.state.isSelected ===false)
 			{
-				this.props.func(this.props.piece)
+				this.props.func(this.props.piece,this.props.label, 1)
 			}
 			
 
@@ -74,7 +74,7 @@ class Slice extends React.Component {
 				isHovered: true,
 				isSelected: true
 			});
-			this.props.func(+this.props.piece)
+			this.props.func(this.props.piece,this.props.label, 1)
 
 
 		}
@@ -92,7 +92,7 @@ class Slice extends React.Component {
 			if (this.state.isSelected===true)
 			{
 
-				this.props.func(-this.props.piece)
+				this.props.func(-this.props.piece,this.props.label, 0)
 			}
 
 
@@ -172,7 +172,7 @@ class Pie extends React.Component {
 
 		if (data.length <= 0)
 		{
-			var totalSum=0
+			var totalSum=0.001 // not nan
 		}
 		else
 		{
@@ -202,10 +202,14 @@ class Pie extends React.Component {
 
 		);
 	}
-	selectedValue(x) {
+	selectedValue(x, type, add) {
 		this.setState({
 			sum: this.state.sum + x
 		})
+
+		// const arr = [type]
+
+		this.props.forSlice(type,add)
 
 	}
 
@@ -231,6 +235,13 @@ class Pie extends React.Component {
 }
   
 class DonutChart extends React.Component {
+
+	inDonut(x, add)
+	{
+		this.props.onSelectedShotType(x,add)
+	}
+
+
     render() {
 		//   let width = window.innerWidth;
 		//   let height = window.innerHeight;
@@ -254,7 +265,9 @@ class DonutChart extends React.Component {
 				outerRadius={radius}
 				cornerRadius={7}
 				padAngle={.02}
-				data={this.props.data} />
+				data={this.props.data} 
+				forSlice= {this.inDonut.bind(this)}
+			/>
 				{/* <g>
 				<circle cx="50" cy="55" r="45" fill="none" stroke="#F0CE01" strokeWidth="4" />
     <text textAnchor="middle" x="250" y="55" fill="red">Circle Text</text>

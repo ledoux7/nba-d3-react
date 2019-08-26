@@ -28,6 +28,7 @@ class Navigation extends React.Component {
                             <Nav.Link href='/scatter'>Scatter</Nav.Link>
                             <Nav.Link href='/shotchart'>Shotchart</Nav.Link>
                             <Nav.Link href='/my'>My Shotchart</Nav.Link>
+                            
                             <Nav.Link href='/grid'>Grid</Nav.Link>
 
 

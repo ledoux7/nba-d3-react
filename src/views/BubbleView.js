@@ -60,6 +60,11 @@ class Main1 extends Component {
 			players: [],
             uniqList: [],
             uniqShotTypes: [],
+            selShotTypes:[],
+            // selShotTypes:["Jump Shot", "Step Back Jump shot" ,"Running Jump shot","Pullup Jump shot","Driving Layup"],
+
+
+
 			wholePts: [],
 			wholeAst: [],
 			test: [],
@@ -274,7 +279,33 @@ class Main1 extends Component {
 		this.setState({
 			minCount: x
 		})
+    }
+    
+    handleShotTypeChange(type,add) 
+    {
+        if(add)
+        {
+            this.setState({
+                // selShotTypes: this.state.selShotTypes.push(type)
+                selShotTypes: this.state.selShotTypes.concat([type])
+                
+            })
+        }
+        else
+        {
+            this.setState({
+                selShotTypes: this.state.selShotTypes.filter((ele, i) => ele !== type)
+                // uniqList = uniqList.filter((item, index) => uniqIds.includes(item.id))
+            })
+            
+        }
+
+        
+        
+
 	}
+
+
 	handleClick() {
 		// let {margins,data,svgDimensions,onChangeYear,xScale,initialValue, other} = prevProps;
 		// let {margins,data,svgDimensions,onChangeYear,xScale,initialValue, other} = this.props;
@@ -405,8 +436,10 @@ class Main1 extends Component {
 		
 		var r1h = 8
 		var r2h = 10
-		var fullwidth = 10
-		var halfwidth = fullwidth/2
+		var fullwidth = 12
+        var halfwidth = fullwidth/2
+        var qwidth = halfwidth/2
+        var colsize = 12
 
 
         var gh = ab.map(post => (post.id))
@@ -436,9 +469,21 @@ class Main1 extends Component {
 
             agg = agg.filter((shot, index)=> shot.sumPlayer > 5)
             agg = agg.sort((a,b) => (a.sumPlayer < b.sumPlayer) ? 1 : ((b.sumPlayer < a.sumPlayer) ? -1 : 0));
+            // if (this.state.selShotTypes.length > 0)
+            // {
+            //     agg = agg.filter((shot, index)=>  this.state.selShotTypes.includes(shot.player))
+
+            // }
             agg = agg.slice(0,6)
 
+
         } 
+
+        if (this.state.selShotTypes.length > 0)
+        {
+            abc = abc.filter((shot, index)=>  this.state.selShotTypes.includes(shot.action_type))
+            // abc = abc.slice(0,6)
+        }
         
 
         // piecopy.map((p, i) => p.player = "ds2");
@@ -473,15 +518,20 @@ class Main1 extends Component {
 					className="layout"
 					breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
 					// cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-					cols={{ lg: 10, md: 10, sm: 10, xs: 10, xxs: 10 }}
+					cols={{ lg: colsize, md: colsize, sm: colsize, xs: colsize, xxs: colsize }}
 					
 					rowHeight={30}
-					layouts={this.state.layouts}
+                    layouts={this.state.layouts}
+                    margin={[10,10]}
+                    verticalCompact={true}
+                    horizontalCompact={true}
+                    preventCollision={false}
+
 					onLayoutChange={(layout, layouts) =>
 					this.onLayoutChange(layout, layouts)
 					}
               	>
-                <div key="1" style={{ background: '#455162' }} data-grid={{ w: 5, h: r1h, x: 0, y: 0, minW: 2, minH: 3, static: true  }}>
+                <div key="1" style={{ background: '#455162' }} data-grid={{ w: halfwidth, h: r1h, x: 0, y: 0, minW: 2, minH: 1, static: true  }}>
 					
 					
 					<h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px" }}>
@@ -532,33 +582,14 @@ class Main1 extends Component {
       
       
       
-                <div key="2" style={{ background: '#455162' }} data-grid={{ w: 5, h: r1h, x: 5, y: 0, minW: 2, minH: 1, static: true  }}>
-                {
-						piedata.map(post => (
-						// this.state.players.slice(0, 15).map(post => (
-
-							<li align="start">
-								<div>
-									{/* <p>{post.SHOT_DIST} : {post.SHOT_PTS} </p> */}
-									<p>
-                                        {post.player}
-                                        {post.sumPlayer}
-
-                                    </p>
-
-								</div>
-							</li>
-
-
-						))
-					}
-
+                <div key="2" style={{ background: '#455162' }} data-grid={{ w: halfwidth, h: r1h, x: halfwidth, y: 0, minW: 2, minH: 1, static: true  }}>
+                
       
 
 
       			</div>
 
-				<div  key="3" style={{ background: '#455162' }} data-grid={{ w: 3, h:12 , x: 0, y: r1h, minW: 2, minH: 1, static: true  }}>
+				<div  key="3" style={{ background: '#455122' }} data-grid={{ w: qwidth, h:12 , x: 0, y: r1h, minW: 2, minH: 1, static: false}}>
 					{/* <h2>P1</h2> */}
 
                     {/* <FeatureFour data={[5,10,1,3]} size={[500,500]}/>  */}
@@ -619,19 +650,38 @@ class Main1 extends Component {
 
 
 				</div>
-				<div  key="4" style={{ background: '#455162', }} data-grid={{ w: 2.5, h:12 , x: 5, y: r1h, minW: 2, minH: 1, static: true  }}>
+				<div  key="4" style={{ background: '#455162', }} data-grid={{ w: qwidth, h:12 , x: 5, y: r1h, minW: 2, minH: 1, static: false}}>
 					{/* <h2>P2</h2> */}
                     {/* <BarChart  data={piedata} size={[200, 200] }/> display: "block","margin":"auto" */}
                     
                     <DonutChart 
                             
                             data={agg}
+                            onSelectedShotType={this.handleShotTypeChange.bind(this)}
                             // data={piedata}
 
                             // data={[5, 2, 1, 3, 4, 9]}
                             // data={piedata}
                             
                         />
+					
+
+
+				</div>
+                <div  key="5" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:12 , x: 2.5, y: r1h, minW: 2, minH: 1 }}>
+					<h2>P1</h2>
+					{/* <div style={{display: 'flex', justifyContent: "center", "margin-left": "0px", background: '#135162' }}> */}
+					<Shotchart 
+						data={abc}
+						//  xdata={xloc} ydata={yloc}
+						playerId={this.props.playerId}
+						minCount={this.state.minCount}
+						chartType={this.state.chartType}
+						displayToolTips={this.state.displayToolTips}
+						width={400}
+						namee={"p1"}
+						/>
+					{/* </div> */}
 					
 
 

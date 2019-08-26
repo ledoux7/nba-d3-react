@@ -12,6 +12,8 @@ var yScale = d3.scaleLinear().domain([0, 47]).rangeRound([47, 0]);
 var percentFormatter = d3.format(".2%");
 var decFormatter = d3.format(".3n");
 
+var tranTime = 100
+
 export default function() {
     
     var hexRadiusValues = [.8, 1.0, 1.2],
@@ -82,7 +84,7 @@ export default function() {
                 var shots = shotsGroup.selectAll(".shot")
                                     .data(data, function(d){ return [d.x, d.y]; });
                 shots.exit()
-                    .transition().duration(1000)
+                    .transition().duration(tranTime )
                     .attr("r", 0)
                     .attr("d", hexbin1.hexagon(0))
                     .remove();
@@ -112,7 +114,7 @@ export default function() {
                     .attr("r", 0)
                     .on('mouseover', function(d) { if (toolTips) {tool_tip.show(d,this);} })
                     .on('mouseout', function(d) { if (toolTips) {tool_tip.hide(d,this);} })
-                    .transition().duration(1000)
+                    .transition().duration(tranTime )
                     .attr("r", .5);
                 
             }
@@ -122,7 +124,7 @@ export default function() {
                                     .data(hexBinCoords, function(d){ return [d.x, d.y]; });
 
                 shots.exit()
-                    .transition().duration(1000)
+                    .transition().duration(tranTime )
                     .attr("r", 0)
                     .attr("d", hexbin1.hexagon(0))                
                     .remove();
@@ -147,7 +149,7 @@ export default function() {
                     .attr("d", hexbin1.hexagon(0))
                     .on('mouseover', function(d) { if (toolTips) {tool_tip.show(d,this);} })
                     .on('mouseout', function(d) { if (toolTips) {tool_tip.hide(d,this);} })
-                    .transition().duration(1000)
+                    .transition().duration(tranTime )
                     .attr("d", function(d) { 
                                 if (d.length >= hexMinShotThreshold) {
                                     if (d.length <= 4){
@@ -197,7 +199,7 @@ export default function() {
                                         (35 + ((1 + i*2) * 1)) + ", " + 2 + ")";
                                     })
                                     .attr('d', hexbin1.hexagon(0))
-                                    .transition().duration(1000)
+                                    .transition().duration(tranTime )
                                     .attr('d', hexbin1.hexagon(1))
                                     .style('fill', function (d) { return d; });
                     efficiencyLegend.selectAll("text").style("fill", function(){ 
@@ -225,7 +227,7 @@ export default function() {
                                         return "translate(" + (frequencyLegendXStart - d) + ", " + 2 + ")";
                                     })
                                     .attr('d', hexbin1.hexagon(0))
-                                    .transition().duration(1000)
+                                    .transition().duration(tranTime )
                                     .attr('d', function (d) { return hexbin1.hexagon(d); })
                     frequencyLegend.append("text")
                                     .classed("legend-text", true)
