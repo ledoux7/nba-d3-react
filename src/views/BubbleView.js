@@ -40,6 +40,12 @@ const ResponsiveReactGridLayout = WidthProvider(ResponsiveGridLayout );
 const originalLayouts = getFromLS("layouts") || {};
 
 
+const formatDec = d3.format(".2f")
+const formatPerc = d3.format(".0%")
+
+
+
+
 function amount(item)
 {
     return item.Amount;
@@ -94,8 +100,8 @@ class Main1 extends Component {
 			// data: d3.range(100).map(_ => [Math.random(), Math.random()]),
 			data: [[0.1, 0.2], [0.3, 0.2], [4, 2], [4, 1]],
 			minCount: 2,
-			// chartType: 'scatter' ,//'hexbin', // 'scatter'
-			chartType: 'hexbin', // 'scatter'
+			chartType: 'scatter' ,//'hexbin', // 'scatter'
+			// chartType: 'hexbin', // 'scatter'
 
 			displayToolTips: true,
 
@@ -309,13 +315,13 @@ class Main1 extends Component {
 	handleClick() {
 		// let {margins,data,svgDimensions,onChangeYear,xScale,initialValue, other} = prevProps;
 		// let {margins,data,svgDimensions,onChangeYear,xScale,initialValue, other} = this.props;
-		if (this.state.isToggleOn === true) {
+		if (this.state.isToggleOn === false) {
 			this.setState({
 				isToggleOn: !this.state.isToggleOn,
 				chartType: 'scatter'
 			})
 		}
-		else if (this.state.isToggleOn === false) {
+		else if (this.state.isToggleOn === true) {
 			this.setState({
 				isToggleOn: !this.state.isToggleOn,
 				chartType: 'hexbin'
@@ -405,24 +411,24 @@ class Main1 extends Component {
         }))
   
 		
-		deff = players.filter((p) => (p["selectedP2"] === true))
-		deff = deff.filter((p) => (p.SHOT_DIST >= this.state.dist2L) && (p.SHOT_DIST <= this.state.dist2R))
+		// deff = players.filter((p) => (p["selectedP2"] === true))
+		// deff = deff.filter((p) => (p.SHOT_DIST >= this.state.dist2L) && (p.SHOT_DIST <= this.state.dist2R))
 		
 
-        var deff = deff.map((shot, index) => ({
-			player: shot.PLAYER_NAME,
-			x: (shot.LOC_X + 250) / 10,
-			y: (shot.LOC_Y + 50) / 10,
-			action_type: shot.SHOT_TYPE,
-			shot_distance: shot.SHOT_DIST,
-			shot_made_flag: shot.FGM,
-			shot_value: shot.SHOT_VALUE,
-			shot_pts: shot.SHOT_PTS,
-			shot_zone: shot.SHOT_ZONE,
-			shot_area: shot.SHOT_AREA,
-			score_margin: shot.SCORE_DIFF
+        // var deff = deff.map((shot, index) => ({
+		// 	player: shot.PLAYER_NAME,
+		// 	x: (shot.LOC_X + 250) / 10,
+		// 	y: (shot.LOC_Y + 50) / 10,
+		// 	action_type: shot.SHOT_TYPE,
+		// 	shot_distance: shot.SHOT_DIST,
+		// 	shot_made_flag: shot.FGM,
+		// 	shot_value: shot.SHOT_VALUE,
+		// 	shot_pts: shot.SHOT_PTS,
+		// 	shot_zone: shot.SHOT_ZONE,
+		// 	shot_area: shot.SHOT_AREA,
+		// 	score_margin: shot.SCORE_DIFF
 
-        }))
+        // }))
         
         // deff.map((p, i) => (p.PLAYER_NAME === "Kevin Durant" 	))	
 		// deff = deff.filter((p) => (p.player === "Kevin Durant"))
@@ -445,7 +451,7 @@ class Main1 extends Component {
         var gh = ab.map(post => (post.id))
         var piedata = sumFGA.filter((p) => gh.includes(p.pid) )
         
-        var piecopy = JSON.parse(JSON.stringify(piedata));
+        // var piecopy = JSON.parse(JSON.stringify(piedata));
 
 
 
@@ -484,17 +490,53 @@ class Main1 extends Component {
             abc = abc.filter((shot, index)=>  this.state.selShotTypes.includes(shot.action_type))
             // abc = abc.slice(0,6)
         }
+
+        if (ab.length > 0)
+        {
+            var allFGA = ab.map(item => item.FGA).reduce((prev, next) => prev + next);
+            var allFGM = ab.map(item => item.FGM).reduce((prev, next) => prev + next);
+            var allSP = ab.map(item => item.SHOT_PTS).reduce((prev, next) => prev + next);
+            var allPPS = allSP / allFGA
+            var allFREQ= allFGA / allFGA
+
+            var js = ab.filter((shot,i)=> shot.SHOT_TYPE === "Jump Shot")
+
+            if (js.length > 0)
+            {
+                
+                var jsFGA = js.map(item => item.FGA).reduce((prev, next) => prev + next);
+                var jsFGM = js.map(item => item.FGM).reduce((prev, next) => prev + next);
+                var jsSP = js.map(item => item.SHOT_PTS).reduce((prev, next) => prev + next);
+                var jsPPS = jsSP / jsFGA
+                var jsFREQ= jsFGA / allFGA
+
+            }
+
+
+            // var allFGA = ab.map(item => item.FGA).reduce((prev, next) => prev + next);
+            // var allFGA = ab.map(item => item.FGA).reduce((prev, next) => prev + next);
+
+
+
+        }
+        else
+        {
+            var allFGA =0
+            var allFGM =0
+            var allPPS =0
+            var allFREQ =0
+
+            var jsFGA =0
+            var jsFGM =0
+            var jsPPS =0
+            var jsFREQ =0
+            // var allFGA =0
+
+        }
+
+
         
 
-        // piecopy.map((p, i) => p.player = "ds2");
-
-        // piecopy = ["da","ea"]
-
-		// var layout = [
-        //     {i: 'a', x: 0, y: 0, w: 1, h: 2, static: true},
-        //     {i: 'b', x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4},
-        //     {i: 'c', x: 4, y: 0, w: 1, h: 2}
-        //   ];
           return (
             <div style={{ background: '#57667B',color:"white" }}> 
             {/* // <div >  */}
@@ -505,7 +547,9 @@ class Main1 extends Component {
 				
 				<div>
 				<button onClick={this.handleClick} className="white" style={{ "margin-left":"10px"}} >
-							{this.state.isToggleOn ? 'Scatter' : 'Hexbin'}
+                            {/* {this.state.isToggleOn ?  'Scatter': 'Hexbin'} */}
+							{this.state.isToggleOn ?  'Hexbin': 'Scatter'}
+                            
 						</button>
 					
 				</div>
@@ -523,7 +567,7 @@ class Main1 extends Component {
 					rowHeight={30}
                     layouts={this.state.layouts}
                     margin={[10,10]}
-                    verticalCompact={true}
+                    // verticalCompact={true}
                     horizontalCompact={true}
                     preventCollision={false}
 
@@ -589,7 +633,7 @@ class Main1 extends Component {
 
       			</div>
 
-				<div  key="3" style={{ background: '#455122' }} data-grid={{ w: qwidth, h:12 , x: 0, y: r1h, minW: 2, minH: 1, static: false}}>
+				<div  key="3" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:7 , x: 0, y: r1h, minW: 2, minH: 1, static: false}}>
 					{/* <h2>P1</h2> */}
 
                     {/* <FeatureFour data={[5,10,1,3]} size={[500,500]}/>  */}
@@ -617,29 +661,74 @@ class Main1 extends Component {
                             <thead>
                                 <tr>
                                 {/* <th>#</th> */}
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Username</th>
+                                <th>Shot Type</th>
+                                <th>FGM</th>
+                                <th>FGA</th>
+                                <th>PPS</th>
+                                <th>FREQ%</th>
+
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                {/* <td>1</td> */}
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
+                                    {/* <td>1</td> */}
+                                    <td>All</td>
+                                    <td>
+                                        {allFGM}
+                                    </td>
+                                    <td>
+                                        {allFGA}
+                                    </td>
+                                    <td>
+                                        {formatDec(allPPS)}
+                                    </td>
+                                    <td>
+                                        {formatPerc(allFREQ)}
+                                        
+                                    </td>
+
                                 </tr>
                                 <tr>
-                                {/* <td>2</td> */}
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
+                                    {/* <td>2</td> */}
+                                    <td>Jump Shot</td>
+
+                                    <td>
+                                        {jsFGM}
+                                    </td>
+                                    <td>
+                                        {jsFGA}
+                                        
+                                    </td>
+                                    <td>
+                                        {formatDec(jsPPS)}
+                                        
+                                    </td>
+                                    <td>
+                                        {formatPerc(jsFREQ)}
+                                    </td>
+
                                 </tr>
                                 <tr>
-                                {/* <td>3</td> */}
-                                <td colSpan="2">Larry the Bird</td>
-                                <td>@twitter</td>
+                                    {/* <td>3</td> */}
+                                    {/* <td colSpan="2">Larry the Bird</td> */}
+                                    <td>Step Back</td>
+                    
+
                                 </tr>
+                                <tr>
+
+                                    <td>Pullup</td>
+                     
+
+                                </tr>
+                                <tr>
+        
+                                    <td>Layup</td>
+                  
+                                    {/* <td>RA</td> */}
+
+                                </tr>
+       
                             </tbody>
                             </Table>
 
@@ -650,8 +739,8 @@ class Main1 extends Component {
 
 
 				</div>
-				<div  key="4" style={{ background: '#455162', }} data-grid={{ w: qwidth, h:12 , x: 5, y: r1h, minW: 2, minH: 1, static: false}}>
-					{/* <h2>P2</h2> */}
+				<div  key="4" style={{ background: '#455162', }} data-grid={{ w: qwidth, h:12 , x: qwidth, y: r1h, minW: 2, minH: 1, static: false}}>
+					<h2>Donut</h2>
                     {/* <BarChart  data={piedata} size={[200, 200] }/> display: "block","margin":"auto" */}
                     
                     <DonutChart 
@@ -668,7 +757,7 @@ class Main1 extends Component {
 
 
 				</div>
-                <div  key="5" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:12 , x: 2.5, y: r1h, minW: 2, minH: 1 }}>
+                <div  key="5" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:12 , x: halfwidth , y: r1h, minW: 2, minH: 1 }}>
 					<h2>P1</h2>
 					{/* <div style={{display: 'flex', justifyContent: "center", "margin-left": "0px", background: '#135162' }}> */}
 					<Shotchart 
@@ -686,6 +775,16 @@ class Main1 extends Component {
 
 
 				</div>
+  
+
+                <div  key="7" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:20 , x: halfwidth + qwidth-0.2, y: r1h+24, minW: 2, minH: 1 }}>
+					<h2>P1</h2>
+
+					
+
+
+				</div>
+
 
       
    
@@ -693,27 +792,7 @@ class Main1 extends Component {
 
               </ResponsiveReactGridLayout>
 
-			  <div>
-					{
-						agg.map(post => (
-						// this.state.players.slice(0, 15).map(post => (
-
-							<li align="start">
-								<div>
-									{/* <p>{post.SHOT_DIST} : {post.SHOT_PTS} </p> */}
-									<p>
-                                        {post.player}
-                                        {post.sumPlayer}
-
-                                    </p>
-
-								</div>
-							</li>
-
-
-						))
-					}
-				</div>
+			  
 
             </div>
 

@@ -20,16 +20,16 @@ class Navigation extends React.Component {
                         <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto" fill="true" variant="pills">
                             <Nav.Link href="/">Home</Nav.Link>
-                            <Nav.Link href='/filter'>Filter</Nav.Link>
+                            {/* <Nav.Link href='/filter'>Filter</Nav.Link> */}
                             {/* <Nav.Link href='/table'>Table</Nav.Link> */}
-                            <Nav.Link href='/bubble'>Bubble</Nav.Link>
-                            <Nav.Link href='/test'>test</Nav.Link>
-                            <Nav.Link href='/slider'>Slider</Nav.Link>
-                            <Nav.Link href='/scatter'>Scatter</Nav.Link>
-                            <Nav.Link href='/shotchart'>Shotchart</Nav.Link>
-                            <Nav.Link href='/my'>My Shotchart</Nav.Link>
+                            <Nav.Link href='/bubble'>Modular</Nav.Link>
+                            {/* <Nav.Link href='/test'>test</Nav.Link> */}
+                            {/* <Nav.Link href='/slider'>Slider</Nav.Link> */}
+                            {/* <Nav.Link href='/scatter'>Scatter</Nav.Link> */}
+                            {/* <Nav.Link href='/shotchart'>Shotchart</Nav.Link> */}
+                            {/* <Nav.Link href='/my'>My Shotchart</Nav.Link> */}
                             
-                            <Nav.Link href='/grid'>Grid</Nav.Link>
+                            {/* <Nav.Link href='/grid'>Grid</Nav.Link> */}
 
 
 

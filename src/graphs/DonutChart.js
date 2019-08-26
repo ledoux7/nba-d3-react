@@ -187,7 +187,7 @@ class Pie extends React.Component {
 			{/* {format(this.state.totalSum)} */}
 			{/* {format(32)} */}
 			<g>
-				{/* <circle cx="50" cy="55" r="45" fill="none" stroke="#F0CE01" strokeWidth="4" /> */}
+					
    					 <text textAnchor="middle" x="0" y="-40" fill="white" style={{"font-family": 'Roboto, sans-serif',"fontSize":24}}
 						 >
 							
@@ -195,7 +195,7 @@ class Pie extends React.Component {
 							<tspan x="0" dy="1.2em"> {formatPerc(this.state.sum/totalSum)} </tspan>
 							{/* <tspan x="0" dy="1.2em"> {d3.format(".1f")(piece)} </tspan> */}
 							
-							</text>
+					</text>
 				</g>
 			
 		</g>

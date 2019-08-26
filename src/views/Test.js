@@ -1,348 +1,778 @@
-import React, { Component } from 'react'
-// import './App.css'
-import { scaleLinear } from "d3-scale"
-import { max } from 'd3-array'
-import { select } from 'd3-selection'
+
+import React, { Component } from 'react';
+
+import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
+import { WidthProvider} from "react-grid-layout";
+
+
+
+
+
+import BarChart from '../graphs/BarChart'
+import { CONFIG } from '../config.js';
 import * as d3 from "d3";
+import axios from 'axios'
+import Dropdown from '../components/Dropdown';
+import MultiDropdown from '../components/MultiDropdown';
+import Scatterplot from "../graphs/Scatterplot"
+// import BarChart from "../graphs/BarChart"
 
-/********************* BubbleChart start ***************************/
+import Datapoint from "../components/Datapoint"
+import RangeSlider from "../components/RangeSlider"
+import SingleSlider from "../components/singleSlider"
+import VertSlider from "../components/VertSlider"
 
-/********************* BubbleChart end ***************************/
+// import Shotchart from "../graphs/Shotchart"
+import Shotchart from "../graphs/myShotChart"
+
+import {Container,Col,Row,Table} from 'react-bootstrap'
 
 
-/********************* RangeSlider start ***************************/
-const rng = [2000, 2105]
+// import FeatureFour from "../graphs/Bubble1"
+import Pie from "../graphs/PieChart"
+import DonutChart from "../graphs/DonutChart"
 
-class Axis extends React.Component {
-    componentDidMount() {
-        this.renderAxis();
-    }
-    renderAxis() {
-        const { svgDimensions, margins, textcolor } = this.props
-        const xValue = (svgDimensions.width - margins.left - margins.right) / 10;
-        d3.select(this.axisElement)
-            .call(d3.axisBottom()
-                .scale(this.props.xScale)
-                .ticks(6)
-                .tickFormat(d3.format(""))
-                //.styles("d","yellow")
-            )
-            .selectAll("text")
-            .style("font-size", "10px")
-            .style("fill", "black")
-            .attr("x", xValue)
 
-        d3.select(this.axisElement).selectAll("line").attr("stroke", "black")
-        d3.select(this.axisElement).select("path").style("d", "none")
-        // d3.select(this.axisElement).select("path").style("stroke","yellow")
-        // 
-    }
-    render() {
-        return (
-            //   <g className="rangeSliderAxis" textcolor="blue" transform="translate(0,10)" ref={el => this.axisElement = el } />
-            <g></g>
-        )
-    }
+// import AnimatedPieHooks from "./AnimatedPieHooks";
+
+
+const ResponsiveReactGridLayout = WidthProvider(ResponsiveGridLayout );
+const originalLayouts = getFromLS("layouts") || {};
+
+
+function amount(item)
+{
+    return item.Amount;
+  }
+  
+function sum(prev, next)
+{
+    return prev + next;
 }
 
 
 
+class Main1 extends Component {
+
+	constructor(props) {
+		super(props)
+		this.state = {
+			players: [],
+            uniqList: [],
+            uniqShotTypes: [],
+            selShotTypes:[],
+            // selShotTypes:["Jump Shot", "Step Back Jump shot" ,"Running Jump shot","Pullup Jump shot","Driving Layup"],
 
 
 
+			wholePts: [],
+			wholeAst: [],
+			test: [],
+			response: [],
+            bardata: [12, 25, 6, 6, 9, 10],
+            
+            bardata: [
+                        {
+                            index:0,
+                            value:30
+                        },
+                        {
+                            index:1,
+                            value:30
+                        },
+                        {
+                            index:2,
+                            value:40
+                        }
+
+            ],
+
+			id: "root",
+			error: null,
+			isLoaded: false,
+			fnames: [],
+			// data: d3.range(100).map(_ => [Math.random(), Math.random()]),
+			data: [[0.1, 0.2], [0.3, 0.2], [4, 2], [4, 1]],
+			minCount: 2,
+			// chartType: 'scatter' ,//'hexbin', // 'scatter'
+			chartType: 'hexbin', // 'scatter'
+
+			displayToolTips: true,
+
+			isToggleOn: true,
 
 
+			left: 0,
+			right: 35,
+
+			distL: 0,
+			distR: 35,
+
+			dist2L: 0,
+            dist2R: 35,
+            
+            sumFGA: [],
+
+		};
+		this.handleClick = this.handleClick.bind(this);
+
+	}
 
 
+	componentDidMount() {
+
+		const racesRequest = axios.get(CONFIG.SHOTS)
+			.then(response =>
+				response.data
+			).then(players => this.setDefault(players))
+
+	}
+
+	setDefault = (players) => {
+
+		// players.map(i => i.firstname = "Nepal");
+		players.map(i => i.key = "players");
+
+		// players.map((p, i) => {
+		// 	if (p.PLAYER_NAME === "Stephen Curry") { p["selectedP1"] = true; }
+		// })
+		// players.map((p, i) => {
+		// 	if (p.PLAYER_NAME === "Giannis") { p["selectedP2"] = true; }
+        // })
+        
+        // players.map((p, i) => p.selectedP1 = true);
+        players.map((p, i) => p.selectedP1 = false);
+		players.map((p, i) => p.selectedP2 = true);
+        
+
+		players.map((p, i) => p.id = p.PLAYER_ID);
+		players.map((p, i) => p.shotid = i);
+
+        const uniqNames = [...new Set(players.map(d => d.PLAYER_NAME))]
+
+		this.setState({ players: players })
 
 
+        var uniqShotTypes = [...new Set(players.map(d => d.SHOT_TYPE))]
+        // uniqShotTypes = uniqShotTypes.slice(0,5)
+
+		//
+		var uniqIds = [...new Set(players.map(d => d.PLAYER_ID))]
+		var uniqList = players.map((p, index) => ({
+			option: p["PLAYER_NAME"],
+			id: p["PLAYER_ID"],
+			// selectedP1: true,
+            selectedP2: true,
+            selectedP1: false,
+			// selectedP2: false,
+			key: "players"
+		}))
+
+		uniqList = uniqList.filter((item, index) => uniqIds.includes(item.id))
+		// uniqList = uniqList.filter((item,index)=> uniqList.id.indexOf(item.id)===index)                                           
+		uniqList = uniqList.filter((uniqList, index, self) =>
+			index === self.findIndex((t) => (t.id === uniqList.id)))
+
+		uniqList.map((p, i) => p.listid = i);
+
+        this.setState({ uniqList: uniqList, uniqShotTypes: uniqShotTypes })
 
 
-
-// const xScale = d3.scaleLinear()
-//     .domain(rng)
-//     .range([50,window.screen.width/2 - 50])
-//     .clamp(true);
-
-
-// let h1 = xScale(2013), 
-// let h2 = xScale(2015);
-// let tempH1 = xScale(2013), tempH2 = xScale(2015);
-// let trueYear1 = 2013, trueYear2 = 2015;
-
-class Handle extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            handle: '',
-            h1: null,
-            h2: null,
-            tempH1: null,
-            tempH2: null,
-            trueYear1: null,
-            trueYear2:null
-        }
-    }
-    onMouseOver() {
-        this.setState({
-            handle: this.props.handle
-        });
-    }
-    render() {
-        const { initialValue,other, xScale, handle } = this.props;
-        const circle = <circle r="10px" fill="#fa7070" />
-
-        if (handle === "handle1")
+        var agg = []
+        uniqList.forEach(function myFunction(item, index, arr) 
         {
-            this.state.h1 = xScale(initialValue);
-            this.state.tempH1 = xScale(initialValue);
-            this.state.trueH1 = initialValue;
+            // arr[index] = item * 10;
+		    // uniqList = uniqList.filter((item, index) => uniqIds.includes(item.id))
 
-            this.state.h2 = xScale(other);
-            this.state.tempH2 = xScale(other);
-            this.state.trueH2 = other;
+            var p = players.filter((player, index) => player.id === item.id)
 
+            var sumplayer = p.map(item => item.FGM).reduce((prev, next) => prev + next);
+            agg[index] = {pid: item.id,player: item.option, sumPlayer: sumplayer}
+        
+        })
 
-        }
-        else if (handle === "handle2")
-        {
-            this.state.h1 = xScale(other);
-            this.state.tempH1 = xScale(other);
-            this.state.trueH1 = other;
-
-            this.state.h2 = xScale(initialValue);
-            this.state.tempH2 = xScale(initialValue);
-            this.state.trueH2 = initialValue;
-            
+        this.setState({ sumFGA: agg})
+        
 
 
-        }
+	}
 
-        return <g className={handle} transform={`translate(${xScale(initialValue)},0)`}
-            onMouseOver={this.onMouseOver.bind(this)}>{circle}</g>
+	resetThenSet = (value, key) => {
+		let data = [...this.state[key]];
+		data.forEach(item => item.selected = false);
+		data[value].selected = true;
+
+
+		this.setState({ key: data });
+
+	}
+
+	filterAndSort_Laps = (selectedRace, selectedSeason, laptimes, filtQ) => {
+
+		var filtered = laptimes.filter(d => (d.raceName === selectedRace.raceName && d.season === selectedSeason.season))
+		return filtered
+
+	}
+
+
+	toggleSelected = (id, key,uniqList,listid,selCol) => {
+
+
+		let temp = JSON.parse(JSON.stringify(this.state[key]))
+
+		temp.forEach(function myFunction(item, index, arr) {
+			// arr[index] = item * 10;
+			if (arr[index].id === id) {
+				// temp[index].selected = !temp[index].selected
+				temp[index][selCol]= !temp[index][selCol]
+
+			}
+
+		})
+
+
+		uniqList[listid][selCol] = !uniqList[listid][selCol]
+		this.setState({
+			[key]: temp
+		})
+	}
+
+	handleDistChange(x, y) {
+		this.setState({
+			distL: x,
+			distR: y
+
+		})
+	}
+	handleDistChange2(x, y) {
+		this.setState({
+			dist2L: x,
+			dist2R: y
+
+		})
+	}
+	handleChangeYear1(year1, year2) {
+		this.setState({
+			left2: year1,
+			right2: year2,
+
+		})
+	}
+
+	// handleDistChange1(year1, year2) {
+	// 	this.setState({
+	// 		left: year1,
+	// 		right: year2,
+
+	// 	})
+	// }
+
+
+	handleMinDist(x) {
+		this.setState({
+			left: x,
+
+		})
+	}
+
+	handleBinChange(x) {
+		this.setState({
+			minCount: x
+		})
     }
-
-
-
-    componentDidUpdate(prevProps, prevState) {
-        // let {margins,data,svgDimensions,onChangeYear,initialValue} = prevProps;
-        let {margins,data,svgDimensions,onChangeYear,xScale,initialValue, other} = prevProps;
-
-        // let { margins,data, svgDimensions, xScale, onChangeYear } = prevProps;
-
-
-        const minData = d3.min(data), maxData = d3.max(data)
-
-        // const xScale = d3.scaleLinear()
-        // .domain([minData, maxData])
-        // .range([50,window.screen.width/2 - 50])
-        // .clamp(true);
-
-
-        // if (this.state.h1 === null  )
-        // {
-        //     // var h1 = xScale(initialValue);
+    
+    handleShotTypeChange(type,add) 
+    {
+        if(add)
+        {
+            this.setState({
+                // selShotTypes: this.state.selShotTypes.push(type)
+                selShotTypes: this.state.selShotTypes.concat([type])
+                
+            })
+        }
+        else
+        {
+            this.setState({
+                selShotTypes: this.state.selShotTypes.filter((ele, i) => ele !== type)
+                // uniqList = uniqList.filter((item, index) => uniqIds.includes(item.id))
+            })
             
-        //     this.state.tempH1 =xScale(initialValue);
+        }
 
-        //     this.state.rueYear1 = initialValue;
+        
+        
 
-        //     this.state.h1 = xScale(initialValue);
+	}
 
-        //     // this.state.h2 = xScale(other);
 
-        //     this.state.tempH2 = xScale(other);
-        //     this.state.trueYear2 = other;
+	handleClick() {
+		// let {margins,data,svgDimensions,onChangeYear,xScale,initialValue, other} = prevProps;
+		// let {margins,data,svgDimensions,onChangeYear,xScale,initialValue, other} = this.props;
+		if (this.state.isToggleOn === true) {
+			this.setState({
+				isToggleOn: !this.state.isToggleOn,
+				chartType: 'scatter'
+			})
+		}
+		else if (this.state.isToggleOn === false) {
+			this.setState({
+				isToggleOn: !this.state.isToggleOn,
+				chartType: 'hexbin'
 
-        //     this.state.h2 = xScale(other);
+			})
+		}
 
-        // }
 
-        // if (this.state.h1 === null &&(this.state.handle === "handle1") )
-        // {
-        //     var h1 = xScale(initialValue);
+
+
+    }
+    
+    resetLayout() {
+        this.setState({ layouts: {} });
+      }
+    
+      onLayoutChange(layout, layouts) {
+        saveToLS("layouts", layouts);
+        this.setState({ layouts });
+      }
+    
+
+
+	render() {
+
+		// const names = this.state.players.map(post => post.firstname)
+		const { fnames, players, uniqList , sumFGA, uniqShotTypes} = this.state
+
+		// var uniqIds = [...new Set(players.map(d => d.PLAYER_ID))]
+		// var uniqList = players.map((p, index) => ({
+		// 	option: p["PLAYER_NAME"],
+		// 	id: p["PLAYER_ID"],
+		// 	selected: false,
+		// 	key: "players"
+		// }))
+
+		// uniqList = uniqList.filter((item, index) => uniqIds.includes(item.id))
+		// // uniqList = uniqList.filter((item,index)=> uniqList.id.indexOf(item.id)===index)                                           
+		// uniqList = uniqList.filter((uniqList, index, self) =>
+		// 	index === self.findIndex((t) => (t.id === uniqList.id)))
+
+		// uniqList.map((p, i) => p.listid = i);
+
+
+
+
+		var ab = players.filter((p) => (p["selectedP1"] === true))
+
+
+		ab = ab.filter((p) => (p.SHOT_DIST >= this.state.distL) && (p.SHOT_DIST <= this.state.distR))
+
+		// ab = ab.filter((p) => (((p.LOC_X+250)/10) >= this.state.distL) && (((p.LOC_X+250)/10) <= this.state.right1))
+		// ab = ab.filter((p) => (((p.LOC_Y+50)/10) >= this.state.left2) && (((p.LOC_Y+50)/10) <= this.state.right2))
+
+
+
+		// const pts = ab.map(post => (post.SHOT_DIST))
+
+		var dist = players.map(post => (post.SHOT_DIST))
+		var wholeAst = players.map(p => ((p.LOC_X+250)/10))
+		var wholePts = players.map(p => (p.LOC_Y+50)/10)
+
+
+		var xloc = ab.map(post => (post.LOC_X))
+		var yloc = ab.map(post => (post.LOC_Y))
+
+
+		// xloc.unshift(20)
+		// xloc.unshift(300)
+		// yloc.unshift(20)
+		// yloc.unshift(300)
+
+
+		var abc = ab.map((shot, index) => ({
+			player: shot.PLAYER_NAME,
+			x: (shot.LOC_X + 250) / 10,
+			y: (shot.LOC_Y + 50) / 10,
+			action_type: shot.SHOT_TYPE,
+			shot_distance: shot.SHOT_DIST,
+			shot_made_flag: shot.FGM,
+			shot_value: shot.SHOT_VALUE,
+			shot_pts: shot.SHOT_PTS,
+			shot_zone: shot.SHOT_ZONE,
+			shot_area: shot.SHOT_AREA,
+			score_margin: shot.SCORE_DIFF
+
+        }))
+  
+		
+		deff = players.filter((p) => (p["selectedP2"] === true))
+		deff = deff.filter((p) => (p.SHOT_DIST >= this.state.dist2L) && (p.SHOT_DIST <= this.state.dist2R))
+		
+
+        var deff = deff.map((shot, index) => ({
+			player: shot.PLAYER_NAME,
+			x: (shot.LOC_X + 250) / 10,
+			y: (shot.LOC_Y + 50) / 10,
+			action_type: shot.SHOT_TYPE,
+			shot_distance: shot.SHOT_DIST,
+			shot_made_flag: shot.FGM,
+			shot_value: shot.SHOT_VALUE,
+			shot_pts: shot.SHOT_PTS,
+			shot_zone: shot.SHOT_ZONE,
+			shot_area: shot.SHOT_AREA,
+			score_margin: shot.SCORE_DIFF
+
+        }))
+        
+        // deff.map((p, i) => (p.PLAYER_NAME === "Kevin Durant" 	))	
+		// deff = deff.filter((p) => (p.player === "Kevin Durant"))
+
+		
+
+		var binrange = [1, 20]
+
+		var testt = [0,124,300]
+
+		
+		var r1h = 8
+		var r2h = 10
+		var fullwidth = 12
+        var halfwidth = fullwidth/2
+        var qwidth = halfwidth/2
+        var colsize = 12
+
+
+        var gh = ab.map(post => (post.id))
+        var piedata = sumFGA.filter((p) => gh.includes(p.pid) )
+        
+        var piecopy = JSON.parse(JSON.stringify(piedata));
+
+
+
+        var agg = []
+        if (ab.length > 0)
+        {
+            uniqShotTypes.forEach(function myFunction(item, index, arr) 
+            {
+                // arr[index] = item * 10;
+                // uniqList = uniqList.filter((item, index) => uniqIds.includes(item.id))
+
+                var p = ab.filter((player, index) => player.SHOT_TYPE === item)
+                if (p.length > 0)
+                {
+                    var sumplayer = p.map(item => item.FGA).reduce((prev, next) => prev + next);
+                    agg[index] = {player: item, sumPlayer: sumplayer}
             
-        //     var tempH1 =xScale(initialValue);
-
-        //     var trueYear1 = initialValue;
-
-        //     this.state.h1 = xScale(initialValue);
-
-        // }
-        // else if ((this.state.h2 === null) && (this.state.handle === "handle2")) {
-
-        //     var h2 = xScale(initialValue);
-
-        //     var tempH2 = xScale(initialValue);
-        //     var trueYear2 = initialValue;
-
-        //     this.state.h2 = xScale(initialValue);
-
-        // }
-
-
-
-
-        let mouseValue, trueMouseValue, self = this;
-        let handle = this.state.handle;
-        let minWidth = 2//((window.screen.width/2 - margins.left - margins.right)/5);
-        // let minWidth = ((window.screen.width/2 - margins.left - margins.right)/10);
-
-
-        const drag = d3.drag()
-            .on("drag", draged).on("end", dragend);
-
-        d3.select(".rangeSliderGroup").call(drag);
-
-        function draged() {
-            mouseValue = d3.mouse(this)[0];
-            trueMouseValue = getTrueMouseValue(mouseValue);
-
-            handle === "handle1" ? this.state.h1 = mouseValue : this.state.h2 = mouseValue;
-
-            if ((this.state.h2 - this.state.h1) > minWidth && mouseValue > margins.left && mouseValue < (svgDimensions.width - margins.right)) {
-                d3.select("." + self.state.handle).attr("transform", "translate(" + mouseValue + ",0)");
-                if (handle === "handle1") {
-                    this.state.tempH1 = mouseValue;
-                    this.state.trueH1 = trueMouseValue;
-                } else {
-                    this.state.tempH2 = mouseValue
-                    this.state.trueH2 = trueMouseValue;
                 }
-            }
-            else {
-                this.state.h1 = this.state.tempH1;
-                this.state.h2 = this.state.tempH2;
-                handle === "handle1" ? trueMouseValue = this.state.trueH1 : trueMouseValue = this.state.trueH2;
-            }
-            d3.select(".rangeBarFilled").remove();
-            d3.select(".rangeSliderGroup")
-                .insert("line", ".rangeSliderAxis")
-                .attr("x1", this.state.h1)
-                .attr("x2", this.state.h2)
-                .attr("y1", 0)
-                .attr("y2", 0)
-                .attr("class", "rangeBarFilled")
+                
+            })
 
+            agg = agg.filter((shot, index)=> shot.sumPlayer > 5)
+            agg = agg.sort((a,b) => (a.sumPlayer < b.sumPlayer) ? 1 : ((b.sumPlayer < a.sumPlayer) ? -1 : 0));
+            // if (this.state.selShotTypes.length > 0)
+            // {
+            //     agg = agg.filter((shot, index)=>  this.state.selShotTypes.includes(shot.player))
+
+            // }
+            agg = agg.slice(0,6)
+
+
+        } 
+
+        if (this.state.selShotTypes.length > 0)
+        {
+            abc = abc.filter((shot, index)=>  this.state.selShotTypes.includes(shot.action_type))
+            // abc = abc.slice(0,6)
         }
-        function dragend() {
-            this.state.h1 = xScale(getTrueMouseValue(this.state.tempH1));
-            this.state.h2 = xScale(getTrueMouseValue(this.state.tempH2));
-            if (self.state.handle === "") {
+        
 
-            }
-            else {
-                d3.select("." + self.state.handle).attr("transform", "translate(" + xScale(trueMouseValue) + ",0)");
-                d3.select(".rangeBarFilled").remove();
-                d3.select(".rangeSliderGroup")
-                    .insert("line", ".rangeSliderAxis")
-                    .attr("x1", xScale(this.state.trueH1))
-                    .attr("x2", xScale(this.state.trueH2))
-                    .attr("y1", 0)
-                    .attr("y2", 0)
-                    .attr("class", "rangeBarFilled");
+        // piecopy.map((p, i) => p.player = "ds2");
 
-                onChangeYear(this.state.trueH1, this.state.trueH2);
-            }
+        // piecopy = ["da","ea"]
+
+		// var layout = [
+        //     {i: 'a', x: 0, y: 0, w: 1, h: 2, static: true},
+        //     {i: 'b', x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4},
+        //     {i: 'c', x: 4, y: 0, w: 1, h: 2}
+        //   ];
+          return (
+            <div style={{ background: '#57667B',color:"white" }}> 
+            {/* // <div >  */}
+
+				{/* <h1>Hello bugs </h1> */}
 
 
-        }
-        function getTrueMouseValue(mouseValue) {
-            // const a = xScale.invert(mouseValue) * 10
-            // return Math.round(a) / 10;
+				
+				<div>
+				<button onClick={this.handleClick} className="white" style={{ "margin-left":"10px"}} >
+							{this.state.isToggleOn ? 'Scatter' : 'Hexbin'}
+						</button>
+					
+				</div>
 
 
-            const a = xScale.invert(mouseValue) 
-            return Math.round(a) ;
-        }
+
+
+              {/* <button onClick={() => this.resetLayout()}>Reset Layout</button> */}
+				<ResponsiveReactGridLayout
+					className="layout"
+					breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
+					// cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+					cols={{ lg: colsize, md: colsize, sm: colsize, xs: colsize, xxs: colsize }}
+					
+					rowHeight={30}
+                    layouts={this.state.layouts}
+                    margin={[10,10]}
+                    // verticalCompact={true}
+                    horizontalCompact={true}
+                    preventCollision={false}
+
+					onLayoutChange={(layout, layouts) =>
+					this.onLayoutChange(layout, layouts)
+					}
+              	>
+                <div key="1" style={{ background: '#455162' }} data-grid={{ w: halfwidth, h: r1h, x: 0, y: 0, minW: 2, minH: 1, static: true  }}>
+					
+					
+					<h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px" }}>
+						Player
+					</h2>
+					<div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px", "margin-top": "10px"  }}>  
+						<div style={{color:"black" }}>
+
+						<MultiDropdown
+							titleHelper="Player"
+							title="Select Players"
+							col="PLAYER_NAME"
+							uid="PLAYER_ID"
+							selCol={"selectedP1"}
+
+							list={this.state.players}
+							uniqList={uniqList}
+							toggleItem={this.toggleSelected}
+						/>
+						</div>
+						
+						{/* {wholePts} */}
+					</div>
+					<h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px", "margin-top": "10px"  }}>
+						Distance
+					</h2>
+					<div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "-10px" }}>  
+						<div>
+
+						<RangeSlider onChangeYear={this.handleDistChange.bind(this)}
+						data={dist} 
+						handle1={"handle3"}
+						handle2={"handle4"}
+						sGroup={"test"}
+						label={"Distance"}
+
+						left={this.state.distL}
+						right={this.state.distR}
+						width={500}
+						height={150}
+					/>
+						</div>
+						
+						{/* {wholePts} */}
+					</div>
+
+                </div>
+      
+      
+      
+                <div key="2" style={{ background: '#455162' }} data-grid={{ w: halfwidth, h: r1h, x: halfwidth, y: 0, minW: 2, minH: 1, static: true  }}>
+                
+      
+
+
+      			</div>
+
+				<div  key="3" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:12 , x: 0, y: r1h, minW: 2, minH: 1, static: false}}>
+					{/* <h2>P1</h2> */}
+
+                    {/* <FeatureFour data={[5,10,1,3]} size={[500,500]}/>  */}
+                    {/* <div  style={{ "margin-left":"20px","margin-top":"20px",  "font-family": "sans-serif", "text-align": "center"  }}> */}
+                    {/* <div  style={{ "margin-left":"20px","margin-top":"20px",  "font-family": "sans-serif", "text-align": "center"  }}> */}
+                    <div>
+
+                        {/* {piedata} */}
+                        {/* <span className="label">Animated Pie Hooks (D3 animations)</span> */}
+                        {/* <Pie
+                        data={piedata}
+                        fake={piecopy}
+                        width={200}
+                        height={200}
+                        innerRadius={60}
+                        outerRadius={100}
+                        /> */}
+
+
+                        {/* <Table striped bordered hover variant="dark"> */}
+                        {/* <Table striped bordered hover > */}
+                        <Table borderless striped style={{color:"white"}}>
+
+
+                            <thead>
+                                <tr>
+                                {/* <th>#</th> */}
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Username</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                {/* <td>1</td> */}
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                </tr>
+                                <tr>
+                                {/* <td>2</td> */}
+                                <td>Jacob</td>
+                                <td>Thornton</td>
+                                <td>@fat</td>
+                                </tr>
+                                <tr>
+                                {/* <td>3</td> */}
+                                <td colSpan="2">Larry the Bird</td>
+                                <td>@twitter</td>
+                                </tr>
+                            </tbody>
+                            </Table>
+
+
+
+
+                    </div>
+
+
+				</div>
+				<div  key="4" style={{ background: '#455162', }} data-grid={{ w: qwidth, h:12 , x: qwidth, y: r1h, minW: 2, minH: 1, static: false}}>
+					{/* <h2>P2</h2> */}
+                    {/* <BarChart  data={piedata} size={[200, 200] }/> display: "block","margin":"auto" */}
+                    
+                    <DonutChart 
+                            
+                            data={agg}
+                            onSelectedShotType={this.handleShotTypeChange.bind(this)}
+                            // data={piedata}
+
+                            // data={[5, 2, 1, 3, 4, 9]}
+                            // data={piedata}
+                            
+                        />
+					
+
+
+				</div>
+                <div  key="5" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:12 , x: halfwidth , y: r1h, minW: 2, minH: 1 }}>
+					<h2>P1</h2>
+					{/* <div style={{display: 'flex', justifyContent: "center", "margin-left": "0px", background: '#135162' }}> */}
+					<Shotchart 
+						data={abc}
+						//  xdata={xloc} ydata={yloc}
+						playerId={this.props.playerId}
+						minCount={this.state.minCount}
+						chartType={this.state.chartType}
+						displayToolTips={this.state.displayToolTips}
+						width={400}
+						namee={"p1"}
+						/>
+					{/* </div> */}
+					
+
+
+				</div>
+                <div  key="6" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:12 , x: halfwidth + qwidth, y: r1h, minW: 2, minH: 1 }}>
+					<h2>P1</h2>
+					{/* <div style={{display: 'flex', justifyContent: "center", "margin-left": "0px", background: '#135162' }}> */}
+					{/* <Shotchart 
+						data={deff}
+						//  xdata={xloc} ydata={yloc}
+						playerId={this.props.playerId}
+						minCount={this.state.minCount}
+						chartType={this.state.chartType}
+						displayToolTips={this.state.displayToolTips}
+						width={400}
+						namee={"p2"}
+						/> */}
+					{/* </div> */}
+					
+
+
+				</div>
+
+                <div  key="7" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:20 , x: halfwidth + qwidth, y: r1h+24, minW: 2, minH: 1 }}>
+					<h2>P1</h2>
+
+					
+
+
+				</div>
+
+
+      
+   
+                
+
+              </ResponsiveReactGridLayout>
+
+			  <div>
+					{
+						agg.map(post => (
+						// this.state.players.slice(0, 15).map(post => (
+
+							<li align="start">
+								<div>
+									{/* <p>{post.SHOT_DIST} : {post.SHOT_PTS} </p> */}
+									<p>
+                                        {post.player}
+                                        {post.sumPlayer}
+
+                                    </p>
+
+								</div>
+							</li>
+
+
+						))
+					}
+				</div>
+
+            </div>
+
+
+          );
+
+
+	}
+
+}
+
+export default Main1;
+
+function getFromLS(key) {
+    let ls = {};
+    if (global.localStorage) {
+      try {
+        ls = JSON.parse(global.localStorage.getItem("rgl-8")) || {};
+      } catch (e) {
+        /*Ignore*/
+      }
     }
-}
-
-const RangeSlider = ({ data, onChangeYear, left, right }) => {
-    const margins = { top: 20, right: 50, bottom: 20, left: 50 },
-        svgDimensions = { width: window.screen.width / 2, height: window.screen.height / 6 };
-
-    const minData = d3.min(data), maxData = d3.max(data)
-
-    const xScale = d3.scaleLinear()
-        .domain([minData, maxData])
-        .range([margins.left, svgDimensions.width - margins.right])
-        .clamp(true);
-
-    const i1 = left, i2 = right
-
-    const RangeBar = <line x1={margins.left} y1="0" x2={svgDimensions.width - margins.right} y2="0" className="rangeBar" />
-    const RangeBarFilled = <line x1={xScale(i1)} y1="0" x2={xScale(i2)} y2="0" className="rangeBarFilled" />
-
-    return <svg className="rangeSliderSvg" width={svgDimensions.width} height={svgDimensions.height}>
-        <g className="rangeSliderGroup" transform={`translate(0,${svgDimensions.height - margins.bottom - 40})`}>
-            {RangeBar}{RangeBarFilled}
-            <Axis margins={margins} svgDimensions={svgDimensions} xScale={xScale} />
-
-
-            <Handle onChangeYear={onChangeYear} handle="handle1" initialValue={i1} other={i2} data={data} xScale={xScale} margins={margins} svgDimensions={svgDimensions} />
-            <Handle onChangeYear={onChangeYear} handle="handle2" initialValue={i2} other={i1}  data={data} xScale={xScale} margins={margins} svgDimensions={svgDimensions} />
-        </g>
-    </svg>;
-}
-/********************* RangeSlider end ***************************/
-export default RangeSlider;
-
-
-// class Charts extends React.Component{
-//   constructor(){
-//     super();
-//     this.state = {
-//         rangeSliderData : '',
-//         bubbleChartData : []
-//     }
-//   }
-//   componentWillMount(){
-//     this.setState({
-//         rangeSliderData: {
-//             initialValue1 : 2013,
-//             initialValue2 : 2015
-//         }
-//        
-//     });
-//   }
-
-//   handleChangeYear(year1,year2){
-//       this.setState({
-//           left: year1,
-//           right: year2
-//           
-//       })
-//   }
-
-//   render(){
-//     const width = window.screen.width/2, height = window.screen.height;
-
-//     return <div className="charts" style={{width: width , margin: '0 auto'}}>
-//           <div className="rangeSlider" >
-//           {/* <div className="rangeSlider" style={{background: '#343042'}}> */}
-//               <h1>dsad</h1>
-//             <RangeSlider onChangeYear={this.handleChangeYear.bind(this)} data={this.state.rangeSliderData}/>
-//           </div>
-//           {/* <div className="bubbleChart" style={{background: '#403c52'}}> */}
-//           <div className="bubbleChart" >
-
-//             {/* <BubbleChart bubbleChartData={this.state.bubbleChartData}/> */}
-//             left: {this.state.left}
-//             <br></br>
-//             right: {this.state.right}
-
-
-//           </div>
-//       </div>;
-//   }
-// }
-// export default Charts;
-// const mountingPoint = document.createElement('div');
-// mountingPoint.className = 'react-app';
-// document.body.appendChild(mountingPoint);
-
-// ReactDOM.render(
-//   <Charts />,
-//   mountingPoint
-// )
+    return ls[key];
+  }
+  
+  function saveToLS(key, value) {
+    if (global.localStorage) {
+      global.localStorage.setItem(
+        "rgl-8",
+        JSON.stringify({
+          [key]: value
+        })
+      );
+    }
+  }
