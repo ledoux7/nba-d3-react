@@ -58,7 +58,8 @@ class Main1 extends Component {
 		super(props)
 		this.state = {
 			players: [],
-			uniqList: [],
+            uniqList: [],
+            uniqShotTypes: [],
 			wholePts: [],
 			wholeAst: [],
 			test: [],
@@ -147,6 +148,8 @@ class Main1 extends Component {
 		this.setState({ players: players })
 
 
+        var uniqShotTypes = [...new Set(players.map(d => d.SHOT_TYPE))]
+        // uniqShotTypes = uniqShotTypes.slice(0,5)
 
 		//
 		var uniqIds = [...new Set(players.map(d => d.PLAYER_ID))]
@@ -167,7 +170,7 @@ class Main1 extends Component {
 
 		uniqList.map((p, i) => p.listid = i);
 
-        this.setState({ uniqList: uniqList })
+        this.setState({ uniqList: uniqList, uniqShotTypes: uniqShotTypes })
 
 
         var agg = []
@@ -308,7 +311,7 @@ class Main1 extends Component {
 	render() {
 
 		// const names = this.state.players.map(post => post.firstname)
-		const { fnames, players, uniqList , sumFGA} = this.state
+		const { fnames, players, uniqList , sumFGA, uniqShotTypes} = this.state
 
 		// var uniqIds = [...new Set(players.map(d => d.PLAYER_ID))]
 		// var uniqList = players.map((p, index) => ({
@@ -410,6 +413,33 @@ class Main1 extends Component {
         var piedata = sumFGA.filter((p) => gh.includes(p.pid) )
         
         var piecopy = JSON.parse(JSON.stringify(piedata));
+
+
+
+        var agg = []
+        if (ab.length > 0)
+        {
+            uniqShotTypes.forEach(function myFunction(item, index, arr) 
+            {
+                // arr[index] = item * 10;
+                // uniqList = uniqList.filter((item, index) => uniqIds.includes(item.id))
+
+                var p = ab.filter((player, index) => player.SHOT_TYPE === item)
+                if (p.length > 0)
+                {
+                    var sumplayer = p.map(item => item.FGA).reduce((prev, next) => prev + next);
+                    agg[index] = {player: item, sumPlayer: sumplayer}
+            
+                }
+                
+            })
+
+            agg = agg.filter((shot, index)=> shot.sumPlayer > 5)
+            agg = agg.sort((a,b) => (a.sumPlayer < b.sumPlayer) ? 1 : ((b.sumPlayer < a.sumPlayer) ? -1 : 0));
+            agg = agg.slice(0,6)
+
+        } 
+        
 
         // piecopy.map((p, i) => p.player = "ds2");
 
@@ -589,16 +619,19 @@ class Main1 extends Component {
 
 
 				</div>
-				<div  key="4" style={{ background: '#455162' }} data-grid={{ w: 2.5, h:12 , x: 5, y: r1h, minW: 2, minH: 1, static: true  }}>
-					<h2>P2</h2>
-                    {/* <BarChart  data={piedata} size={[200, 200] }/> */}
+				<div  key="4" style={{ background: '#455162', }} data-grid={{ w: 2.5, h:12 , x: 5, y: r1h, minW: 2, minH: 1, static: true  }}>
+					{/* <h2>P2</h2> */}
+                    {/* <BarChart  data={piedata} size={[200, 200] }/> display: "block","margin":"auto" */}
+                    
                     <DonutChart 
-                    
-                    data={piedata}
-                    // data={[5, 2, 1, 3, 4, 9]}
-                    // data={piedata}
-                    
-                    />,
+                            
+                            data={agg}
+                            // data={piedata}
+
+                            // data={[5, 2, 1, 3, 4, 9]}
+                            // data={piedata}
+                            
+                        />
 					
 
 
@@ -612,7 +645,7 @@ class Main1 extends Component {
 
 			  <div>
 					{
-						piecopy.map(post => (
+						agg.map(post => (
 						// this.state.players.slice(0, 15).map(post => (
 
 							<li align="start">

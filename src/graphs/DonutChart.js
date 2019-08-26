@@ -234,8 +234,8 @@ class DonutChart extends React.Component {
     render() {
 		//   let width = window.innerWidth;
 		//   let height = window.innerHeight;
-		let width = 400;
-		let height = 400//window.innerHeight;
+		let width = 450;
+		let height = 450//window.innerHeight;
       
 		let minViewportSize = Math.min(width, height);
 		let radius = (minViewportSize * .9) / 2;
@@ -243,9 +243,10 @@ class DonutChart extends React.Component {
 		let y = height / 2;
 	
 		return (
-			<div>
-			<svg width={width} height={height}>
-			{/* <svg width="100%" height="100%"> */}
+			<svg width={width} height={height}  className="hotpie">
+			{/* // <svg className="sc" width="100%" height="100%"> */}
+			
+			{/* <div id={"shot-chart"+this.props.namee} className="sc" ></div>*/}
 
 			<Pie x={x}
 				y={y}
@@ -259,8 +260,6 @@ class DonutChart extends React.Component {
     <text textAnchor="middle" x="250" y="55" fill="red">Circle Text</text>
 				</g> */}
 			</svg>
-			{/* sad */}
-			</div>
 			
 		);
     }

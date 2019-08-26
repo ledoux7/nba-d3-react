@@ -202,7 +202,13 @@ span {
   width: 120px;
 }
 
+.hotpie {
 
+display: block;
+  margin: auto;
+  /* width: 80em; */
+
+}
 
 
 
