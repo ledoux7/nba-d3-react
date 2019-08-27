@@ -35,20 +35,21 @@ const Main = () => (
   <main>
     <Switch>
       {/* <Route exact path='/' component={Home}/>   */}
-      <Route exact path='/' component={grid}/>     
+      <Route exact path='/' component={Home}/>     
+      <Route path='/template' component={Template}/>
+      <Route path='/compare' component={grid}/>
+      <Route path='/scatter' component={Scatter}/>
 
+
+      <Route path='/bubble' component={Bubble}/>
       <Route path='/table' component={Table}/>
       <Route path='/filter' component={Filter}/>
       <Route path='/barchart' component={Better}/>
       <Route path='/slider' component={Slider}/>
       <Route path='/test' component={Axistest}/>
-      <Route path='/bubble' component={Bubble}/>
       {/* <Route path='/slider' component={sibs}/> */}
-      <Route path='/scatter' component={Scatter}/>
       <Route path='/shotchart' component={Shotchart}/>
       <Route path='/my' component={myShotchart}/>
-      <Route path='/grid' component={grid}/>
-      <Route path='/template' component={Template}/>
 
       
 

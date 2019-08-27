@@ -186,24 +186,72 @@ class Main1 extends Component {
 	}
 
 
-    toggleSelected = (id, key,uniqList,listid,selCol) => 
+    toggleSelected = (id, key,uniqList,listid,selCol, singleMode) => 
     {
-        // deep copy
-		let temp = JSON.parse(JSON.stringify(this.state[key]))
+        if (singleMode)
+                    {
+            // deep copy
+            let temp = JSON.parse(JSON.stringify(this.state[key]))
+            let temp2 = JSON.parse(JSON.stringify(this.state[key]))
 
-		temp.forEach(function myFunction(item, index, arr) {
-			// arr[index] = item * 10;
-			if (arr[index].id === id) {
-				// temp[index].selected = !temp[index].selected
-				temp[index][selCol]= !temp[index][selCol]
+            
+            temp.map(d => d[selCol] = false)
+            uniqList.map(d => d[selCol] = false)
 
-			}
 
-		})
-		uniqList[listid][selCol] = !uniqList[listid][selCol]
-		this.setState({
-			[key]: temp
-		})
+            temp.forEach(function myFunction(item, index, arr) {
+                // arr[index] = item * 10;
+                if (arr[index].id === id) {
+                    // temp[index].selected = !temp[index].selected
+                    temp[index][selCol]= !temp2[index][selCol]
+                    // temp[index][selCol]= !this.state[key][index][selCol]
+
+                    
+                    // temp[index][selCol]= !temp2[key][index][selCol]
+                    // temp[index][selCol]= true;
+                    
+
+                }
+
+            })
+            uniqList[listid][selCol] = !uniqList[listid][selCol]
+            
+            // uniqList[listid][selCol] = true; // !uniqList[listid][selCol]
+            this.setState({
+                [key]: temp,
+                uniqList: uniqList
+            })
+
+                            
+        }
+
+
+        else
+        {
+         // deep copy
+         let temp = JSON.parse(JSON.stringify(this.state[key]))
+
+         temp.forEach(function myFunction(item, index, arr) {
+             // arr[index] = item * 10;
+             if (arr[index].id === id) {
+                 // temp[index].selected = !temp[index].selected
+                 temp[index][selCol]= !temp[index][selCol]
+
+             }
+
+         })
+         uniqList[listid][selCol] = !uniqList[listid][selCol]
+         this.setState({
+             [key]: temp
+         })
+
+        }
+        
+    }
+    
+    hei (id, key,uniqList,listid,selCol) 
+    {
+        
 	}
 
 	handleDistChange(x, y) {
@@ -309,21 +357,7 @@ class Main1 extends Component {
 		var xloc = ab.map(post => (post.LOC_X))
 		var yloc = ab.map(post => (post.LOC_Y))
 
-		// var abc = ab.map((shot, index) => ({
-		// 	player: shot.PLAYER_NAME,
-		// 	x: (shot.LOC_X + 250) / 10,
-		// 	y: (shot.LOC_Y + 50) / 10,
-		// 	action_type: shot.SHOT_TYPE,
-		// 	shot_distance: shot.SHOT_DIST,
-		// 	shot_made_flag: shot.FGM,
-		// 	shot_value: shot.SHOT_VALUE,
-		// 	shot_pts: shot.SHOT_PTS,
-		// 	shot_zone: shot.SHOT_ZONE,
-		// 	shot_area: shot.SHOT_AREA,
-		// 	score_margin: shot.SCORE_DIFF
 
-        // }))
-  
 		var binrange = [1, 20]
 
 		var testt = [0,124,300]
@@ -466,7 +500,14 @@ class Main1 extends Component {
 
 							list={this.state.shotlog}
 							uniqList={uniqList}
-							toggleItem={this.toggleSelected}
+                            
+                            // toggleItem={this.hei.bind(this)}
+                            // singleMode={true}
+                            singleMode={false}
+                            
+
+                            toggleItem={this.toggleSelected}
+                            // 
 						/>
 						</div>
 						

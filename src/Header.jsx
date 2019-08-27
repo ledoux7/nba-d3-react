@@ -21,33 +21,49 @@ class Navigation extends React.Component {
                                 <Nav className="mr-auto" fill="true" variant="pills" style={{"list-style": "none",      display: "flex", justifyContent:"space-between"   }}>
                                     {/* <Nav className="mr-auto" fill="true" variant="pills"> */}
 
-                                    {/* <Link to="/"  style={{ textDecoration: 'none' }}>Home</Link> */}
-                                    <NavLink to="/"         style={{ color: 'lightgrey',"text-decoration": "none" ,fontSize:24}}>Home</NavLink>
+                                    <NavLink to="/"         style={{ color: 'lightgrey',"text-decoration": "none" ,fontSize:24}}>
+                                        Home
+                                    </NavLink>
 
-                                    <NavLink to='/bubble'   style={{ color: 'lightgrey',"text-decoration": "none","margin-left":"15px", fontSize:24 }}>
+                                    <NavLink to='/compare'   style={{ color: 'lightgrey',"text-decoration": "none","margin-left":"15px", fontSize:24 }}>
+                                        Compare
+                                    </NavLink>
+
+                                    {/* <NavLink to='/bubble'   style={{ color: 'lightgrey',"text-decoration": "none","margin-left":"15px", fontSize:24 }}>
                                         Modular
-                                    </NavLink>
-                                    <NavLink to='/test'   style={{ color: 'lightgrey',"text-decoration": "none","margin-left":"15px", fontSize:24 }}>
-                                        Test
-                                    </NavLink>
-                                    <NavLink to="/slider"   style={{ color: 'lightgrey',"text-decoration": "none","margin-left":"15px", fontSize:24 }}>
-                                        Slider
-                                    </NavLink>
+                                    </NavLink> */}
+
+                                    
                                     <NavLink to='/scatter'   style={{ color: 'lightgrey',"text-decoration": "none","margin-left":"15px", fontSize:24 }}>
                                         Scatter
                                     </NavLink>
+
+                                    {/* <NavLink to='/test'   style={{ color: 'lightgrey',"text-decoration": "none","margin-left":"15px", fontSize:24 }}>
+                                        Test
+                                    </NavLink>
+
+                                    <NavLink to="/slider"   style={{ color: 'lightgrey',"text-decoration": "none","margin-left":"15px", fontSize:24 }}>
+                                        Slider
+                                    </NavLink>
+
+
                                     <NavLink to='/my'   style={{ color: 'lightgrey',"text-decoration": "none","margin-left":"15px", fontSize:24 }}>
                                         ShotChart
                                     </NavLink>
+
                                     <NavLink to='/shotchart'   style={{ color: 'lightgrey',"text-decoration": "none","margin-left":"15px", fontSize:24 }}>
                                         ShotChartOld
                                     </NavLink>
+                                    */}
                                     <NavLink to='/filter'   style={{ color: 'lightgrey',"text-decoration": "none","margin-left":"15px", fontSize:24 }}>
-                                        Filter
-                                    </NavLink>
+                                         Table
+                                    </NavLink> 
+
                                     <NavLink to='/template'   style={{ color: 'lightgrey',"text-decoration": "none","margin-left":"15px", fontSize:24 }}>
                                         Template
                                     </NavLink>
+  
+
 
 
 

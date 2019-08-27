@@ -123,7 +123,7 @@ class Slice extends React.Component {
 		let {value,piece, label, fill, innerRadius = 0, outerRadius, cornerRadius, padAngle, ...props} = this.props;
 		if (this.state.isSelected) 
 		{
-			outerRadius *= 1.11;
+			outerRadius *= 1.1;
 		}
 		let arc = d3.arc()
 		.innerRadius(innerRadius)
@@ -336,11 +336,11 @@ class Pie extends React.Component {
 						 >
 							
 							<tspan x="0" dy="1.2em"> {this.state.sum} </tspan>
-							<tspan x="0" dy="1.2em"> {this.state.totalSum} </tspan>
-							<tspan x="0" dy="1.2em"> {this.state.donut[0].label} </tspan>
+							<tspan x="0" dy="1.2em"> {formatPerc(this.state.sum/ this.state.totalSum)} </tspan>
+							{/* <tspan x="0" dy="1.2em"> {this.state.totalSum} </tspan> */}
+							{/* <tspan x="0" dy="1.2em"> {this.state.donut[0].label} </tspan> */}
 
 
-							{/* <tspan x="0" dy="1.2em"> {formatPerc(this.state.sum/ totalSum)} </tspan> */}
 							{/* <tspan x="0" dy="1.2em"> {formatPerc(this.state.sum/10)} </tspan> */}
 
 							{/* <tspan x="0" dy="1.2em"> {d3.format(".1f")(piece)} </tspan> */}
