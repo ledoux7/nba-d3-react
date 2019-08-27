@@ -17,6 +17,8 @@ import Shotchart from './views/ShotchartView'
 import myShotchart from './views/myShotchartView'
 import grid from './views/Grid'
 import Bubble from './views/BubbleView'
+import Template from './views/Template'
+
 
 
 
@@ -46,6 +48,8 @@ const Main = () => (
       <Route path='/shotchart' component={Shotchart}/>
       <Route path='/my' component={myShotchart}/>
       <Route path='/grid' component={grid}/>
+      <Route path='/template' component={Template}/>
+
       
 
 

@@ -29,22 +29,22 @@ export class ShotChart extends React.Component {
 			"y": (90 + 50) / 10,
 			"action_type": "Jump Shot",
 			"shot_distance": 24,
-			"shot_made_flag":1
+			"FGM":1
 			},
 			{
 	
-				"x": (-166+ 250) / 10,
-				"y": (231 + 50) / 10,
+				"x": (226+ 250) / 10,
+				"y": (90 + 50) / 10,
 				"action_type": "Jump Shot",
 				"shot_distance": 28,
-				"shot_made_flag":1
+				"FGM":1
 				},
 				{
 					"x": (-2+ 250) / 10,
 					"y":  (63 + 50) / 10,
 					"action_type": "Jump Shot",
 					"shot_distance": 6,
-					"shot_made_flag":1
+					"FGM":0
 					}
 		]
 	

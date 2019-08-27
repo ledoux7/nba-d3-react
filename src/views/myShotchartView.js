@@ -298,16 +298,16 @@ class Main1 extends Component {
 		
 
 		return (
-			// <div className="hmmw" style={{ background: '#57667B' }}>
+			<div className="hmmw" style={{ background: '#57667B' }}>
 
-			<div className="hmmw" >
-				<h1>Hello bugs </h1>
-				<div>
+			{/* // <div className="hmmw" > */}
+				{/* <h1>Hello bugs </h1> */}
+				{/* <div> */}
 
-					<h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "100px" }}>
+					{/* <h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "100px" }}>
 						Player
-					</h2>
-					<div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "100px", "margin-top": "10px"  }}>  
+					</h2> */}
+					{/* <div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "100px", "margin-top": "10px"  }}>  
 						<div>
 
 						<MultiDropdown
@@ -322,14 +322,14 @@ class Main1 extends Component {
 						/>
 						</div>
 						
-						{/* {wholePts} */}
-					</div>
-				</div>
+
+					</div> */}
+				{/* </div> */}
 
 				
-				<div>
+				<div style={{ background: '#57667B' }}>
 
-					<h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "100px", "margin-top": "10px"  }}>
+					<h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "100px", "margin-top": "0px"  }}>
 						Distance
 					</h2>
 					<div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "80px" }}>  
@@ -354,14 +354,14 @@ class Main1 extends Component {
 				</div>
 
 
-				<div >
+				<div style={{ background: '#57667B' }}>
 					<div style={{ display: 'flex', justifyContent: "flex-start","align-items":"flex-start", "margin-left": "100px", "margin-top": "10px"  }}></div>
-					<h2 style={{ width:300}} >
-						Toggle Chart Mode
-					</h2>
-					<h2 style={{ width:300}} >
-						Hex Bin
-					</h2>
+						<h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "100px", "margin-top": "10px"  }} >
+							Toggle Chart Mode
+						</h2>
+						<h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "100px", "margin-top": "10px"  }} >
+							Hex Bin
+						</h2>
 					<div className="break"></div>
 					<div className="asd" style={{ display: 'flex',"flex-direction":"column", justifyContent: "flex-start", "margin-left": "100px" }}>  
 
@@ -392,7 +392,7 @@ class Main1 extends Component {
 
 
 
-				<div><br></br></div>
+				{/* <div><br></br></div> */}
 
 				<div style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "200px" }}>
 
@@ -414,7 +414,7 @@ class Main1 extends Component {
 
 
 				</div>
-				<div><br></br></div>
+				{/* <div><br></br></div> */}
 
 				<div style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "100px", background: '#57667B' }}>
 

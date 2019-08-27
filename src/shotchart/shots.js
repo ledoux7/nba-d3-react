@@ -33,12 +33,12 @@ export default function() {
                 return [d.x, d.y];
             })
             .rollup(function(v) { return {
-                "made": d3.sum(v, function(d) { return d.shot_made_flag }),
-                "points": d3.sum(v, function(d) { return d.shot_pts }),
+                "made": d3.sum(v, function(d) { return d.FGM }),
+                "points": d3.sum(v, function(d) { return d.SHOT_PTS }),
 
                 "attempts": v.length,
-                "pps":  d3.sum(v, function(d) { return d.shot_pts })/v.length,
-                "shootingPercentage":  d3.sum(v, function(d) { return d.shot_made_flag })/v.length
+                "pps":  d3.sum(v, function(d) { return d.SHOT_PTS })/v.length,
+                "shootingPercentage":  d3.sum(v, function(d) { return d.FGM })/v.length
 
             }})
             .entries(data);
@@ -94,7 +94,7 @@ export default function() {
                       .attr("class", "d3-tip")
                       .offset([-8, 0])
                       .html(function(d) { 
-                            return d.player + "<br><br/>" + d.shot_distance + "' " + d.action_type; 
+                            return d.PLAYER_NAME + "<br><br/>" + d.SHOT_DIST + "' " + d.SHOT_TYPE; 
                         });
                     
                     shotsGroup.call(tool_tip);
@@ -104,10 +104,10 @@ export default function() {
                     .append("circle")
                     .classed("shot", true)
                     .classed("make", function(d){
-                          return d.shot_made_flag === 1; // used to set fill color to green if it's a made shot
+                          return d.FGM=== 1; // used to set fill color to green if it's a made shot
                     })
                     .classed("miss", function(d){
-                          return d.shot_made_flag === 0; // used to set fill color to red if it's a miss
+                          return d.FGM === 0; // used to set fill color to red if it's a miss
                     })
                     .attr("cx", function(d) { return d.x; })
                     .attr("cy", function(d) { return yScale(d.y); })

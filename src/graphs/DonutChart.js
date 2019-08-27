@@ -20,6 +20,8 @@ class Slice extends React.Component {
 			isHovered: false,
 			isClicked: false,
 			isSelected: false,
+			prevPiece:-1,
+			touched: false
 
 
 		
@@ -45,7 +47,7 @@ class Slice extends React.Component {
 			
 			});
 
-			this.props.func(-this.props.piece,this.props.label, 0)
+			this.props.func(0,this.props.label, 0)
 		}
 		else{
 			this.setState({
@@ -59,6 +61,10 @@ class Slice extends React.Component {
 			if (this.state.isSelected ===false)
 			{
 				this.props.func(this.props.piece,this.props.label, 1)
+				// this.setState({
+				// 	prevPiece: this.props.piece
+				// });
+	
 			}
 			
 
@@ -68,6 +74,15 @@ class Slice extends React.Component {
 
 	onMouseOver() 
 	{
+		if(this.state.touched === false)
+		{
+			this.setState({
+				touched: true,
+				prevPiece: this.props.piece
+
+			});
+		}
+
 		if (this.state.isClicked === false)
 		{
 			this.setState({
@@ -75,6 +90,9 @@ class Slice extends React.Component {
 				isSelected: true
 			});
 			this.props.func(this.props.piece,this.props.label, 1)
+			// this.setState({
+			// 	prevPiece: this.props.piece
+			// });
 
 
 		}
@@ -92,7 +110,8 @@ class Slice extends React.Component {
 			if (this.state.isSelected===true)
 			{
 
-				this.props.func(-this.props.piece,this.props.label, 0)
+				this.props.func(0,this.props.label, 0)
+				
 			}
 
 
@@ -112,6 +131,19 @@ class Slice extends React.Component {
 		.cornerRadius(cornerRadius)
 		.padAngle(padAngle);
 		var cords= arc.centroid(value)
+
+		// if (this.state.touched === true)
+		// {
+
+		// }
+
+		if ((piece !== this.state.prevPiece) && (this.state.prevPiece !== -1 ) && (this.state.isSelected === true) )
+		{
+			this.setState({
+				prevPiece: piece
+			});
+			this.props.func(piece,label, 1)
+		}
 		
 		return (
 		<g 
@@ -151,6 +183,13 @@ class Pie extends React.Component {
 		this.state = {
 			sum: 0,
 			elements: 0,
+			donut: [{
+						label: "null",
+						value: 0,
+	
+					}],
+			// donut: [1,2,3,4],
+			totalSum: 0.001
 
 
 		
@@ -163,11 +202,90 @@ class Pie extends React.Component {
 		this.renderSlice = this.renderSlice.bind(this);
 
 	}
+	selectedValue(x, type, add)
+	{
+	   var shottypes = this.props.data.map((st, index) => st.SHOT_TYPE)
+
+	   // var hmm = this.state.donut.map((st, index) => ({
+	   // 	label: st.SHOT_TYPE,
+	   // 	value: x,
+
+	   // }))
+
+	//    this.state.donut.find(d => d.label === value.data.SHOT_TYPE)
+
+		// let temp = JSON.parse(JSON.stringify(this.state.donut))
+		// let temp2 = JSON.parse(JSON.stringify(temp))
+		var temp = this.state.donut
+
+		if (temp.length >= 1)
+		{
+			var found = 0
+			
+			temp.forEach(function myFunction(el, index, arr)
+			{
+				if (arr[index].label === type) 
+				//  if (el.label === type)
+				 {
+					found =1 
+					temp[index].value = x
+
+				 }
+			});
+			if (found===0)
+			{
+				temp.push(
+					{
+						label: type,
+						value: x,
+	
+					}
+				)
+			}
+	 
+			 var sum = temp.map(item => item.value).reduce((prev, next) => prev + next)
+			//  const sum = 2
+
+			 this.setState({
+				sum: sum,
+				donut: temp
+			})
+			this.props.forSlice(type,add)
+
+	 
+			// const arr = [type]
+	 
+
+			
+		}
+		else
+		{
+			// this.setState({
+			// 	sum: 33,
+			// 	// donut: this.state.donut.length
+			// })
+			// this.props.forSlice(type,add)
+		}
+	   
+	   
+
+
+	   
+
+   }
+   
+
 
 	render() {
-		let {x, y, data} = this.props;
+
+
+
+
+		let {x, y,data} = this.props;
+		// data = this.props.data
+
 		let pie = d3.pie()
-		.value(d => d.sumPlayer)
+		.value(d => d.sumShotType)
 		// .sort(null);
 
 		if (data.length <= 0)
@@ -176,9 +294,35 @@ class Pie extends React.Component {
 		}
 		else
 		{
+			// var totalSum = data.map(item => item.sumShotType).reduce((prev, next) => prev + next)
+			var tsum = data.map(item => item.sumShotType).reduce((prev, next) => prev + next)
 
-			var totalSum = data.map(item => item.sumPlayer).reduce((prev, next) => prev + next);
+			// this.setState({
+			// 			totalSum: tsum,
+						
+			// 		});
+
+
+
+			if (tsum !== this.state.totalSum)
+			{
+				this.setState({
+					totalSum: tsum,
+					sum: 0,
+					donut: [{
+						label: "null",
+						value: 0,
+	
+					}],
+				});
+
+			}
+			
+
 		}
+		// data.map(d=> d.prevData = data)
+
+		// data.map(d=> d.prevData = prevProps.data)
 
 		
 		return (
@@ -192,7 +336,13 @@ class Pie extends React.Component {
 						 >
 							
 							<tspan x="0" dy="1.2em"> {this.state.sum} </tspan>
-							<tspan x="0" dy="1.2em"> {formatPerc(this.state.sum/totalSum)} </tspan>
+							<tspan x="0" dy="1.2em"> {this.state.totalSum} </tspan>
+							<tspan x="0" dy="1.2em"> {this.state.donut[0].label} </tspan>
+
+
+							{/* <tspan x="0" dy="1.2em"> {formatPerc(this.state.sum/ totalSum)} </tspan> */}
+							{/* <tspan x="0" dy="1.2em"> {formatPerc(this.state.sum/10)} </tspan> */}
+
 							{/* <tspan x="0" dy="1.2em"> {d3.format(".1f")(piece)} </tspan> */}
 							
 					</text>
@@ -202,20 +352,24 @@ class Pie extends React.Component {
 
 		);
 	}
-	selectedValue(x, type, add) {
-		this.setState({
-			sum: this.state.sum + x
-		})
 
-		// const arr = [type]
-
-		this.props.forSlice(type,add)
-
-	}
 
 
 	renderSlice(value, i) {
 		let {innerRadius, outerRadius, cornerRadius, padAngle} = this.props;
+
+		// let {value} = this.prevProps
+		// if(value.data.prevData.some(d => d.SHOT_TYPE === value.data.SHOT_TYPE))
+		// {
+		// 	let prev =  value.data.prevData.find(d => d.SHOT_TYPE === value.data.SHOT_TYPE);
+		// 	var prevPiece = prev.sumShotType
+
+		// } else
+		// {
+		// 	alert("Object not found.");
+		// }
+
+
 		return (
 			<Slice key={i}
 					innerRadius={innerRadius}
@@ -223,8 +377,9 @@ class Pie extends React.Component {
 					cornerRadius={cornerRadius}
 					padAngle={padAngle}
 					value={value}
-					label={value.data.player}
-					piece={value.data.sumPlayer}
+					label={value.data.SHOT_TYPE}
+					piece={value.data.sumShotType}
+					// prevPiece={prevPiece}
 					index={i}
 					fill={this.colorScale(i)} 
 					func={this.selectedValue.bind(this)}
