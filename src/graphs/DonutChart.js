@@ -21,6 +21,8 @@ class Slice extends React.Component {
 			isClicked: false,
 			isSelected: false,
 			prevPiece:-1,
+			prevLabel:"init",
+
 			touched: false
 
 
@@ -78,7 +80,8 @@ class Slice extends React.Component {
 		{
 			this.setState({
 				touched: true,
-				prevPiece: this.props.piece
+				prevPiece: this.props.piece,
+				prevLabel:this.props.label
 
 			});
 		}
@@ -139,10 +142,28 @@ class Slice extends React.Component {
 
 		if ((piece !== this.state.prevPiece) && (this.state.prevPiece !== -1 ) && (this.state.isSelected === true) )
 		{
-			this.setState({
-				prevPiece: piece
-			});
-			this.props.func(piece,label, 1)
+			if ((label === this.state.prevLabel) )
+			{
+				this.setState({
+					prevPiece: piece,
+					prevLabel:label
+				});
+				this.props.func(piece,label, 1)
+			}
+			else
+			{
+				this.setState({
+					// isSelected: false,
+					// isClicked: false,
+					// isSelected: false,
+					// isHovered: false,
+					touched:false
+
+				});
+				// this.props.func(piece,label, 1)
+
+			}
+			
 		}
 		
 		return (
@@ -337,7 +358,7 @@ class Pie extends React.Component {
 							
 							<tspan x="0" dy="1.2em"> {this.state.sum} </tspan>
 							<tspan x="0" dy="1.2em"> {formatPerc(this.state.sum/ this.state.totalSum)} </tspan>
-							{/* <tspan x="0" dy="1.2em"> {this.state.totalSum} </tspan> */}
+							<tspan x="0" dy="1.2em"> {this.state.totalSum} </tspan>
 							{/* <tspan x="0" dy="1.2em"> {this.state.donut[0].label} </tspan> */}
 
 

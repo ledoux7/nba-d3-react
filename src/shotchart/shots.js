@@ -12,7 +12,7 @@ var yScale = d3.scaleLinear().domain([0, 47]).rangeRound([47, 0]);
 var percentFormatter = d3.format(".2%");
 var decFormatter = d3.format(".3n");
 
-var tranTime = 100
+var tranTime = 200
 
 export default function() {
     
