@@ -38,13 +38,10 @@ import DonutChart from "../graphs/DonutChart"
 const ResponsiveReactGridLayout = WidthProvider(ResponsiveGridLayout );
 
 
-const settings = {
-    width: 400,
-    height: 400,
-    padding: 30,
-    numDataPoints: 30,
-    // maxRange: () => Math.random()  % 100
-  };
+// const settings = {
+    
+//     // maxRange: () => Math.random()  % 100
+//   };
 // const originalLayouts = getFromLS("layouts") || {};
 
 
@@ -164,7 +161,9 @@ class Main1 extends Component {
 			// selectedP1: true,
             // selectedP2: true,
             selectedP1: false,
-			selectedP2: false,
+            selectedP2: false,
+			selectedP3: false,
+            
 			key: "uniqKeys"
         }))
 
@@ -183,7 +182,10 @@ class Main1 extends Component {
 
 
         uniqKeys.map((p, i) => {
-			if (p.option === "PTS") { p["selectedP1"] = true; }
+            if (p.option === "PTS") { p["selectedP1"] = true; }
+			if (p.option === "PTS") { p["selectedP2"] = true; }
+			if (p.option === "AST") { p["selectedP3"] = true; }
+            
 		})
 
         // uniqTeams = uniqTeams.filter((item, index) => uniqIds.includes(item.id))
@@ -575,7 +577,7 @@ class Main1 extends Component {
 
 				<ResponsiveReactGridLayout
 					className="layout"
-					breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
+					breakpoints={{lg: 1200, md: 1200, sm: 1200, xs: 1200, xxs: 1200}}
 					// cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
 					cols={{ lg: colsize, md: colsize, sm: colsize, xs: colsize, xxs: colsize }}
 					
@@ -584,7 +586,7 @@ class Main1 extends Component {
                     margin={[10,10]}
                     verticalCompact={false}
                     horizontalCompact={false}
-                    preventCollision={false}
+                    preventCollision={true}
 
                     autoSize={true}
                     // containerPadding={[1,1]}
@@ -594,179 +596,181 @@ class Main1 extends Component {
 					this.onLayoutChange(layout, layouts)
 					}
               	>
-                <div key="1" style={{ background: '#455162' }} data-grid={{ w: qwidth, h: r1h, x: 0, y: 0, minW: 2, minH: 1, static: true }}>
 
-					
-					<h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px","margin-top": "10px" }}>
-						Player
-					</h2>
-          
-					<div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px", "margin-top": "10px" ,autoSize:true }}>  
+
+                <div  key="1" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:r1h , x: qwidth, y: 0, minW: 2, minH: 1, static: false, autoSize:true}}>
+                    <h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px", "margin-top": "10px"  }} >
+                        BarChart
+                        </h2>
+
+                    <div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px", "margin-top": "10px"  }}>  
 						<div style={{color:"black" }}>
-
                             <MultiDropdown
-                                titleHelper="Player"
-                                title="Select Players"
+                                titleHelper="Category"
+                                title="Select Category"
                                 col="PLAYER_NAME"
                                 uid="PLAYER_ID"
                                 selCol={"selectedP1"}
 
-                                list={this.state.stats}
-                                uniqList={uniqList}
+                                list={this.state.uniqKeys}
+                                uniqList={this.state.uniqKeys}
                                 // toggleItem={this.toggleSelect}
-                                singleMode={false}
-                                // singleMode={true}
+                                // singleMode={false}
+                                singleMode={true}
 
-                                maxwidth={(1200/qwidth+50).toString() +"px"}
-                                maxListHeight={"180px"}
+                                
 
                                 toggleItem={this.toggleSelected}
                                 
                                 // toggleItem={this.hei.bind(this)}
                                 
                             />
-						</div>
-                        
-						
-						{/* {wholePts} */}
-					</div>
-					
+                        <div><br></br></div>
 
-                </div>
+                        <div>
+                            {
+                                this.state.uniqKeys.filter(k => k["selectedP1"]=== true).length > 0  ? (
+                                        <BarChart       data={this.state.stats}    size={[400,200]}   col={this.state.uniqKeys.filter(k => k["selectedP1"])[0].option} />
+                                ) : (
+                                    ""
+                            )}
+
+                        </div>
+
+                    </div>
+
+  
+                    </div>
+
+				</div>
+                     
       
       
-      
-                <div key="2" style={{ background: '#455162' }} data-grid={{ w: qwidth, h: r1h, x: qwidth, y: 0, minW: 2, minH: 1, static: true  }}>
+                <div key="2" style={{ background: '#455162' }} data-grid={{ w: qwidth, h: r1h, x: 0, y: 0, minW: 2, minH: 1, static: true  }}>
                     
                     
                 <h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px", "margin-top": "10px"  }}>
-						Teams
+						X Axis
 					</h2>
 					<div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px" }}>  
 						
-                    <div style={{color:"black" }}>
+                        <div style={{color:"black" }}>
+                            <MultiDropdown
+                                    titleHelper="Category"
+                                    title="Select Category"
+                                    col="PLAYER_NAME"
+                                    uid="PLAYER_ID"
+                                    selCol={"selectedP2"}
 
-                        <MultiDropdown
-                            titleHelper="Team"
-                            title="Select Teams"
-                            col="TEAM_NAME"
-                            uid="TEAM_NAME"
-                            selCol={"selectedP2"}
+                                    list={this.state.uniqKeys}
+                                    uniqList={this.state.uniqKeys}
+                                    // toggleItem={this.toggleSelect}
+                                    // singleMode={false}
+                                    singleMode={true}
 
-                            list={this.state.uniqTeams}
-                            uniqList={this.state.uniqTeams}
-                            // toggleItem={this.toggleSelect}
-                            singleMode={false}
-                            // singleMode={true}
-                            maxwidth={(1200/qwidth+50).toString() +"px"}
-                            // maxwidth={"230px"}
+                                    
 
-                            maxListHeight={"180px"}
-                            
-
-                            toggleItem={this.toggleSelected}
-
-                            // maxwidth
-                            
-                            // toggleItem={this.hei.bind(this)}
-                            
-                        />
+                                    toggleItem={this.toggleSelected}
+                                    
+                                    // toggleItem={this.hei.bind(this)}
+                                    
+                                />
+                        
                         </div>
 
 						
 
 					</div>
                    
+                    <h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px", "margin-top": "10px"  }}>
+						Y Axis
+					</h2>
+					<div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px" }}>  
+						
+                        <div style={{color:"black" }}>
+                            <MultiDropdown
+                                    titleHelper="Category"
+                                    title="Select Category"
+                                    col="PLAYER_NAME"
+                                    uid="PLAYER_ID"
+                                    selCol={"selectedP3"}
+
+                                    list={this.state.uniqKeys}
+                                    uniqList={this.state.uniqKeys}
+                                    // toggleItem={this.toggleSelect}
+                                    // singleMode={false}
+                                    singleMode={true}
+
+                                    
+
+                                    toggleItem={this.toggleSelected}
+                                    
+                                    // toggleItem={this.hei.bind(this)}
+                                    
+                                />
+                        
+                        </div>
+
+						
+
+					</div>
 
       			</div>
 
-				<div  key="3" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:10 , x: 0, y: r1h, minW: 2, minH: 1, static: false, autoSize:true}}>
-                    <h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px", "margin-top": "10px"  }} >BarChart</h2>
 
-                    <div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px", "margin-top": "10px"  }}>  
-						<div style={{color:"black" }}>
-                        <MultiDropdown
-							titleHelper="Category"
-							title="Select Category"
-							col="PLAYER_NAME"
-							uid="PLAYER_ID"
-							selCol={"selectedP1"}
+				<div  key="4" style={{ background: '#455162', }} data-grid={{ w: halfwidth, h:12 , x: 0, y: r1h, minW: 2, minH: 1, static: false}}>
+                <h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px", "margin-top": "10px"  }} >
+                        ScatterPlot
+                        </h2>
 
-							list={this.state.uniqKeys}
-                            uniqList={this.state.uniqKeys}
-                            // toggleItem={this.toggleSelect}
-                            // singleMode={false}
-                            singleMode={true}
+                    <div style={{display: 'flex', justifyContent: "flex-start", "margin-left": "20px" }}>
 
-                            
+                        <ScatterPlot
+                        //  data={this.state.randomData}
+                        //  xdata={this.state.randomData.map(d => d[0])}
+                         xdata={this.state.stats.map(d => [d["PLAYER_NAME"],
+                                d[typeof this.state.uniqKeys.filter(k => k["selectedP2"])[0] !== "undefined" ?this.state.uniqKeys.filter(k => k["selectedP2"])[0].option:"PTS"]])}
+                         ydata={this.state.stats.map(d => [d["PLAYER_NAME"],
+                                d[typeof this.state.uniqKeys.filter(k => k["selectedP3"])[0] !== "undefined" ?this.state.uniqKeys.filter(k => k["selectedP3"])[0].option:"REB"]])}
 
-                            toggleItem={this.toggleSelected}
-                            
-                            // toggleItem={this.hei.bind(this)}
-                            
-						/>
-                <div><br></br></div>
 
-                <div>
-                {
-                    this.state.uniqKeys.filter(k => k["selectedP1"]=== true).length > 0  ? (
-                            <BarChart       data={this.state.stats}    size={[400,250]}   col={this.state.uniqKeys.filter(k => k["selectedP1"])[0].option} />
-                    ) : (
-                         ""
-                )}
+                        //  ydata={this.state.stats.map(d => [d["PLAYER_NAME"],d[this.state.uniqKeys.filter(k => k["selectedP1"])[0].option]])}
 
-                </div>
+                        //  ydata={this.state.randomData.map(d => d[1])}
+
+                          width={800}
+                          height={400}
+                          padding={30}
+                        //   xCol={"PTS"}
+                          xCol={typeof this.state.uniqKeys.filter(k => k["selectedP1"])[0] !== "undefined" ?this.state.uniqKeys.filter(k => k["selectedP2"])[0].option:"PTS" }
+
+                          yCol={typeof this.state.uniqKeys.filter(k => k["selectedP2"])[0] !== "undefined" ?this.state.uniqKeys.filter(k => k["selectedP3"])[0].option:"REB" }
+              
+
+                          
+                          />
 
                     </div>
 
-                    
-
-                        
-
-                    
-                    </div>
 
 				</div>
-				<div  key="4" style={{ background: '#455162', }} data-grid={{ w: qwidth, h:12 , x: qwidth, y: r1h, minW: 2, minH: 1, static: false}}>
-					<h2>Donut</h2>
-                    {/* <BarChart  data={piedata} size={[200, 200] }/> display: "block","margin":"auto" */}
-                    
-                    {/* <DonutChart 
-                            data={agg}
-                            onSelectedShotType={this.handleShotTypeChange.bind(this)}
-                        /> */}
+                {/* <div  key="5" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:12 , x: halfwidth , y: r1h, minW: 2, minH: 1 }}>
 
-                        <BarChart 
-                        
-                        data={p1} 
-                        size={[400,250]} 
-                        col={"PTS"}
-                        />  
-					
-
-
-				</div>
-                <div  key="5" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:12 , x: halfwidth , y: r1h, minW: 2, minH: 1 }}>
-					{/* <h2>P1</h2> */}
                     <h2>BarChart</h2>
-                    <div style={{display: 'flex', justifyContent: "center", "margin-left": "20px" }}>
-
-                    <ScatterPlot data={this.state.randomData} {...settings} />
-
-                    </div>
+                   
 
 
-				</div>
+				</div> */}
   
 
-                <div  key="7" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:20 , x: halfwidth + qwidth, y: r1h+24, minW: 2, minH: 1 }}>
+                {/* <div  key="7" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:20 , x: halfwidth + qwidth, y: r1h, minW: 2, minH: 1 }}> */}
                 {/* <div  key="7" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:20 , x: halfwidth + qwidth-0.2, y: r1h+24, minW: 2, minH: 1 }}> */}
                     
-					<h2>P1</h2>
+					{/* <h2>P1</h2> */}
 
                     
 
-				</div>
+				{/* </div> */}
 
 
       
@@ -774,6 +778,29 @@ class Main1 extends Component {
                 
 
               </ResponsiveReactGridLayout>
+
+              <div>
+					{
+						// t.map(post => (
+						[0,0,0,0,0,0,0,0,0,0,0,0].map(post => (
+
+							<li align="start">
+								<div>
+									{/* <p>{post.SHOT_DIST} : {post.SHOT_PTS} </p> */}
+									<p>
+                                        {/* {post.player} */}
+                                        {/* {post.sumPlayer} */}
+
+                                    </p>
+
+								</div>
+							</li>
+
+
+						))
+					}
+				</div>
+
 
               
 

@@ -5,6 +5,9 @@ import * as d3 from "d3";
 import * as d3Axis from "d3-axis";
 import Axis from "../components/AxisScatter";
 
+const formatDec = d3.format(".1f")
+const formatPerc = d3.format(".0%")
+
 // const settings = {
 //     width: 500,
 //     height: 300,
@@ -64,59 +67,102 @@ class XYAxis extends React.Component {
           x={0}
           y={this.props.height - this.props.padding}
           scale={this.props.xScale}
-          label={"sd"}
+          label={this.props.xCol}
           type="Bottom"
         />
 		<Axis
           x={this.props.padding}
           y={0}
           scale={this.props.yScale}
-          label={"sd"}
+          label={this.props.yCol}
           type="Left"
         />
 
-        {/* <Axis
-            translate={`translate(0, ${this.props.height - this.props.padding})`}
-            scale={this.props.xScale}
-            orient="bottom"
-          /> */}
-        {/* <Axis
-            translate={`translate(${this.props.padding}, 0)`}
-            scale={this.props.xScale}
-            orient="left"
-          /> */}
       </g>
     );
   }
 }
 
 class DataCircles extends React.Component {
-  renderCircle(coords) {
+  renderCircle(data) {
     return (
       <circle
-        cx={this.props.xScale(coords[0])}
-        cy={this.props.yScale(coords[1])}
+        cx={this.props.xScale(data[0])}
+        cy={this.props.yScale(data[1])}
         r={8}
-        style={{ fill: "#fa7070" }}
+		// style={{ fill: "#fa7070" }}
+        style={{ fill: "steelblue" }}
+		
 		key={Math.random() * 1}
-		onMouseMove = {(e) => {
+		onMouseMove = {(m) => 
+		{
 			d3.select(".bubbleChartTooltip")
 			   .style("visibility","visible")
-			   .text("" + " (" +coords[0]+","+coords[1]+")")
-			   .attr('x',(e.nativeEvent.offsetX -5) + "px")
-			   .attr('y',(e.nativeEvent.offsetY - 10) + "px")
+			   .text(data[2] )
+			   .attr('x',(m.nativeEvent.offsetX -5) + "px")
+			   .attr('y',(m.nativeEvent.offsetY - 30) + "px")
+
+			d3.select(".bubbleChartTooltip2")
+			   .style("visibility","visible")
+			   .text("(" + formatDec(data[0])+", "+formatDec(data[1])+")")
+			   .attr('x',(m.nativeEvent.offsetX -5) + "px")
+			   .attr('y',(m.nativeEvent.offsetY - 10) + "px")
 		}}
 
-		onMouseOut = {() => {
+		onMouseOut = {() => 
+		{
 			d3.select(".bubbleChartTooltip")
+				.style("visibility","hidden")
+			d3.select(".bubbleChartTooltip2")
 				.style("visibility","hidden")
 		}}
       />
     );
   }
 
-  render() {
-    return <g>{this.props.data.map(this.renderCircle.bind(this))}</g>;
+  render() 
+  {
+	out =[]
+	const ydata= this.props.ydata;
+	const xdata= this.props.xdata;
+
+	if (ydata.length === xdata.length)
+    {
+        var i, out = [];
+        for(i=0;i<xdata.length;i++)
+        {
+            out.push(
+						[xdata[i][1], ydata[i][1], xdata[i][0]]
+				);
+        }
+      }
+      else if (ydata.length > xdata.length){
+        var i, out = [];
+        for(i=0;i<xdata.length;i++)
+        {
+            out.push(
+					[0, ydata[i][1], ydata[i][0]]
+				);
+        }
+
+      }
+      else if (ydata.length < xdata.length){
+
+        var i, out = [];
+        for(i=0;i<xdata.length;i++)
+        {
+          out.push(
+			  	[xdata[i][1], 0, xdata[i][0]]
+			  );
+        }
+
+	  }
+	  
+	return  <g>
+	
+				{out.map(this.renderCircle.bind(this))}
+		
+			</g>;
   }
 }
 
@@ -124,21 +170,25 @@ class ScatterPlot extends React.Component
 {
   getXScale() 
   {
-    const xMax = d3.max(this.props.data, d => d[0]);
+	const xMax = d3.max(this.props.xdata, d => d[1]);
+    // const xMax = d3.max(this.props.xdata);
+	
 
     return d3
       .scaleLinear()
-      .domain([0, xMax])
+      .domain([0, xMax+3])
       .range([this.props.padding, this.props.width - this.props.padding * 2]);
   }
 
   getYScale() 
   {
-    const yMax = d3.max(this.props.data, d => d[1]);
+	const yMax = d3.max(this.props.ydata, d => d[1]);
+    // const yMax = d3.max(this.props.ydata);
+	
 
     return d3
       .scaleLinear()
-      .domain([0, yMax])
+      .domain([0, yMax+3])
       .range([this.props.height - this.props.padding, this.props.padding]);
   }
 
@@ -147,13 +197,30 @@ class ScatterPlot extends React.Component
     const xScale = this.getXScale();
 	const yScale = this.getYScale();
 	const tooltip = <text fill="#fff" fontSize="14" className="bubbleChartTooltip" style={{'visibility':'hidden'}}>tooltip</text>
+	const tooltip2 = <text fill="#fff" fontSize="14" className="bubbleChartTooltip2" style={{'visibility':'hidden'}}>tooltip</text>
+
 	
 
     return (
       <svg width={this.props.width} height={this.props.height}>
-        <DataCircles xScale={xScale} yScale={yScale} {...this.props} />
-        <XYAxis xScale={xScale} yScale={yScale} {...this.props} />
+		<DataCircles 
+			xScale={xScale}
+			yScale={yScale} 
+			xdata={this.props.xdata}
+			ydata={this.props.ydata}
+			xCol={this.props.xCol}
+			yCol={this.props.yCol}
+
+
+
+		/>
+		<XYAxis
+			 xScale={xScale}
+			  yScale={yScale}
+			   {...this.props} />
 		{tooltip}
+		{tooltip2}
+
       </svg>
     );
   }

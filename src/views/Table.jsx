@@ -672,13 +672,15 @@ class Main1 extends Component {
 			  <div>
 					{
 						// this.state.players.map(post => (
-						this.state.stats.map(post => (
+						[0,0,0,0,0,0,0].map(post => (
 
 							<li align="start">
 								<div>
 									<p> </p>
 									<p> </p>
 									<p> </p>
+									{/* <p> </p> */}
+
 
 								</div>
 							</li>

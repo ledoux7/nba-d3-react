@@ -554,7 +554,7 @@ class Main1 extends Component {
                     margin={[10, 10]}
                     verticalCompact={false}
                     horizontalCompact={false}
-                    preventCollision={false}
+                    preventCollision={true}
 
                     autoSize={true}
                     // containerPadding={[1,1]}
@@ -790,7 +790,7 @@ class Main1 extends Component {
                     </div>
 
 
-                    <div key="9" style={{ background: '#455162' }} data-grid={{ w: qwidth, h: 20, x: halfwidth + qwidth - 0.2, y: r1h + 24, minW: 2, minH: 1 ,static: true}}>
+                    <div key="9" style={{ background: '#455162' }} data-grid={{ w: qwidth, h: 20, x: 0, y: r1h + 24, minW: 2, minH: 1 ,static: true}}>
                         <h2>P1</h2>
 						
 

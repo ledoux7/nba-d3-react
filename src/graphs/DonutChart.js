@@ -397,7 +397,7 @@ class Pie extends React.Component {
 							
 							<tspan x="0" dy="1.2em"> {this.state.sum} </tspan>
 							<tspan x="0" dy="1.2em"> {formatPerc(this.state.sum/ this.state.totalSum)} </tspan>
-							<tspan x="0" dy="1.2em"> {this.state.totalSum} </tspan>
+							{/* <tspan x="0" dy="1.2em"> {this.state.totalSum} </tspan> */}
 							{/* <tspan x="0" dy="1.2em"> {this.state.donut[0].label} </tspan> */}
 
 

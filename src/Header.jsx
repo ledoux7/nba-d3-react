@@ -59,10 +59,10 @@ class Navigation extends React.Component {
                                          Table
                                     </NavLink> 
 
-                                    <NavLink to='/template'   style={{ color: 'lightgrey',"text-decoration": "none","margin-left":"15px", fontSize:24 }}>
+                                    {/* <NavLink to='/template'   style={{ color: 'lightgrey',"text-decoration": "none","margin-left":"15px", fontSize:24 }}>
                                         Template
                                     </NavLink>
-  
+   */}
 
 
 

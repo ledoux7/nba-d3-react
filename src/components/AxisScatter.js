@@ -29,17 +29,21 @@ class Axis extends React.Component {
     }
     a;
     get labelPos() {
-      const { type, scale } = this.props;
+	const { type, scale } = this.props;
 
-      switch (type) {
-        case "Top":
-          return { x: scale.range()[1] + 20, y: 0 };
-        case "Right":
-          return { x: 20, y: 0 };
-        case "Bottom":
-          return { x: scale.range()[1] + 0, y: 25 };
-        case "Left":
-          return { x: -25, y: 0 };
+	switch (type) {
+		case "Top":
+			return { x: scale.range()[1] + 20, y: 0 };
+		case "Right":
+			return { x: 20, y: 0 };
+		case "Bottom":
+			return { x: scale.range()[1] + 0, y: 25 };
+		case "Left":
+			return { x: -10, y: 26 };
+		default:
+
+
+
       }
     }
 

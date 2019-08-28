@@ -13,7 +13,7 @@ class DropdownMultiple extends Component {
 			listOpen: false,
 			headerTitle: this.props.title,
 			timeOut: null,
-			singleMode: this.props.singleMode !== 'undefined' ? this.props.singleMode  : false,
+			singleMode: typeof this.props.singleMode !== 'undefined' ? this.props.singleMode  : false,
 			maxwidth: typeof this.props.maxwidth  !== 'undefined'  ? this.props.maxwidth : "300px",
 			maxListHeight: typeof this.props.maxListHeight  !== 'undefined'  ? this.props.maxListHeight : "150px",
 			// maxwidth: 
