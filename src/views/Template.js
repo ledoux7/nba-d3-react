@@ -3,28 +3,22 @@ import React, { Component } from 'react';
 import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
 import { WidthProvider} from "react-grid-layout";
 
-import BarChart from '../graphs/BarChart'
+
 import { CONFIG } from '../config.js';
 import * as d3 from "d3";
 import axios from 'axios'
-import Dropdown from '../components/Dropdown';
-import MultiDropdown from '../components/MultiDropdown';
-import Scatterplot from "../graphs/Scatterplot"
-// import BarChart from "../graphs/BarChart"
 
-import Datapoint from "../components/Datapoint"
+import MultiDropdown from '../components/MultiDropdown';
+// import Scatterplot from "../graphs/ScatterPlot"
+
 import RangeSlider from "../components/RangeSlider"
-import SingleSlider from "../components/singleSlider"
-import VertSlider from "../components/VertSlider"
+
 
 // import Shotchart from "../graphs/Shotchart"
 import Shotchart from "../graphs/myShotChart"
 
-import {Container,Col,Row,Table} from 'react-bootstrap'
+import {Table} from 'react-bootstrap'
 
-
-// import FeatureFour from "../graphs/Bubble1"
-import Pie from "../graphs/PieChart"
 import DonutChart from "../graphs/DonutChart"
 
 

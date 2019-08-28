@@ -7,43 +7,11 @@ import BarChart from '../graphs/BarChart'
 import { CONFIG } from '../config.js';
 import * as d3 from "d3";
 import axios from 'axios'
-import Dropdown from '../components/Dropdown';
 import MultiDropdown from '../components/MultiDropdown';
-// import Dropdown from '../components/Dropdown';
 
-// import Scatterplot from "../graphs/Scatterplot"
-import ScatterPlot from "../graphs/Sc"
-
-// import BarChart from "../graphs/BarChart"
-
-import Datapoint from "../components/Datapoint"
-import RangeSlider from "../components/RangeSlider"
-import SingleSlider from "../components/singleSlider"
-import VertSlider from "../components/VertSlider"
-
-// import Shotchart from "../graphs/Shotchart"
-import Shotchart from "../graphs/myShotChart"
-
-import {Container,Col,Row,Table} from 'react-bootstrap'
-
-
-// import FeatureFour from "../graphs/Bubble1"
-import Pie from "../graphs/PieChart"
-import DonutChart from "../graphs/DonutChart"
-
-
-// import AnimatedPieHooks from "./AnimatedPieHooks";
-
+import ScatterPlot from "../graphs/ScatterPlot"
 
 const ResponsiveReactGridLayout = WidthProvider(ResponsiveGridLayout );
-
-
-// const settings = {
-    
-//     // maxRange: () => Math.random()  % 100
-//   };
-// const originalLayouts = getFromLS("layouts") || {};
-
 
 const formatDec = d3.format(".2f")
 const formatPerc = d3.format(".0%")
@@ -204,9 +172,6 @@ class Main1 extends Component {
 
         // .map((p, i) => p.selectedP1 = true);
 
-        // const randomData = d3.range(settings.numDataPoints).map(() => {
-        //     return [Math.floor(Math.random() * settings.maxRange()),  Math.floor(Math.random() * settings.maxRange())];
-        //   });
         const randomData = [[5,10],[10,17],[25,20]]
 
 		this.setState({ stats: stats, uniqList: uniqList, numberKeys: numberKeys, uniqKeys: uniqKeys, uniqTeams: uniqTeams,randomData:randomData })
@@ -321,16 +286,10 @@ class Main1 extends Component {
 
 
             temp.forEach(function myFunction(item, index, arr) {
-                // arr[index] = item * 10;
                 if (arr[index].id === id) {
-                    // temp[index].selected = !temp[index].selected
-                    temp[index][selCol]= !temp2[index][selCol]
-                    // temp[index][selCol]= !this.state[key][index][selCol]
 
-                    
-                    // temp[index][selCol]= !temp2[key][index][selCol]
-                    // temp[index][selCol]= true;
-                    
+                    temp[index][selCol]= !temp2[index][selCol]
+
 
                 }
 
@@ -340,7 +299,6 @@ class Main1 extends Component {
             // uniqList[listid][selCol] = true; // !uniqList[listid][selCol]
             this.setState({
                 [key]: temp,
-                // uniqList: uniqList
             })
 
                             
@@ -369,42 +327,6 @@ class Main1 extends Component {
         }
         
     }
-    
-    hei1 (id, key,uniqList,listid,selCol) 
-    {
-        var fuckyou=1
-    }
-    
-    hei (id, key,uniqList,listid,selCol) 
-    {
-        // deep copy
-        let temp = JSON.parse(JSON.stringify(this.state[key]))
-        // let temp2 = JSON.parse(JSON.stringify(this.state[key]))
-
-        
-        temp.map(d => d[selCol] = false)
-        uniqList.map(d => d[selCol] = false)
-
-
-		temp.forEach(function myFunction(item, index, arr) {
-			// arr[index] = item * 10;
-			if (arr[index].id === id) {
-				// temp[index].selected = !temp[index].selected
-                temp[index][selCol]= !temp[index][selCol]
-                // temp[index][selCol]= !temp2[key][index][selCol]
-                // temp[index][selCol]= true;
-                
-
-			}
-
-        })
-		// uniqList[listid][selCol] = !uniqList[listid][selCol]
-        
-		uniqList[listid][selCol] = true; // !uniqList[listid][selCol]
-		this.setState({
-			[key]: temp
-		})
-	}
 
 
 	handleDistChange(x, y) {
@@ -496,25 +418,6 @@ class Main1 extends Component {
 		// const names = this.state.shotlog.map(post => post.firstname)
 		const { fnames, stats, uniqList , sumFGA, uniqShotTypes} = this.state
 
-		var ab = stats.filter((p) => (p["selectedP1"] === true))
-
-
-		ab = ab.filter((p) => (p.SHOT_DIST >= this.state.distL) && (p.SHOT_DIST <= this.state.distR))
-
-
-		var dist = stats.map(post => (post.SHOT_DIST))
-		// var wholeAst = stats.map(p => ((p.LOC_X+250)/10))
-		// var wholePts = stats.map(p => (p.LOC_Y+50)/10)
-
-
-		// var xloc = ab.map(post => (post.LOC_X))
-		// var yloc = ab.map(post => (post.LOC_Y))
-
-
-		var binrange = [1, 20]
-
-		var testt = [0,124,300]
-
 		
 		var r1h = 9
 		var r2h = 10
@@ -522,53 +425,6 @@ class Main1 extends Component {
         var halfwidth = fullwidth/2
         var qwidth = halfwidth/2
         var colsize = 12
-
-
-
-
-        // var gh = ab.map(post => (post.id))
-        // var piedata = sumFGA.filter((p) => gh.includes(p.pid) )
-
-        var agg = []
-        if (ab.length > 0)
-        {
-            uniqShotTypes.forEach(function myFunction(item, index, arr) 
-            {
-                // arr[index] = item * 10;
-                // uniqList = uniqList.filter((item, index) => uniqIds.includes(item.id))
-
-                var p = ab.filter((player, index) => player.SHOT_TYPE === item)
-                if (p.length > 0)
-                {
-                    var sumplayer = p.map(item => item.FGA).reduce((prev, next) => prev + next);
-                    agg[index] = {SHOT_TYPE: item, sumShotType: sumplayer}
-            
-                }
-                
-            })
-
-            agg = agg.filter((shot, index)=> shot.sumShotType > 5)
-            agg = agg.sort((a,b) => (a.sumShotType < b.sumShotType) ? 1 : ((b.sumShotType < a.sumShotType) ? -1 : 0));
-            // if (this.state.selShotTypes.length > 0)
-            // {
-            //     agg = agg.filter((shot, index)=>  this.state.selShotTypes.includes(shot.player))
-
-            // }
-            agg = agg.slice(0,6)
-
-
-        } 
-
-        if (this.state.selShotTypes.length > 0)
-        {
-            ab = ab.filter((shot, index)=>  this.state.selShotTypes.includes(shot.SHOT_TYPE))
-            // abc = abc.slice(0,6)
-        }
-
-
-        var p1 = ab.filter((shot, index)=> shot.selectedP1 === true)
-        var p2 = ab.filter((shot, index)=> shot.selectedP2 === true)
-
 
 
           return (
@@ -728,9 +584,9 @@ class Main1 extends Component {
                         <ScatterPlot
                         //  data={this.state.randomData}
                         //  xdata={this.state.randomData.map(d => d[0])}
-                         xdata={this.state.stats.map(d => [d["PLAYER_NAME"],
+                         xdata={stats.map(d => [d["PLAYER_NAME"],
                                 d[typeof this.state.uniqKeys.filter(k => k["selectedP2"])[0] !== "undefined" ?this.state.uniqKeys.filter(k => k["selectedP2"])[0].option:"PTS"]])}
-                         ydata={this.state.stats.map(d => [d["PLAYER_NAME"],
+                         ydata={stats.map(d => [d["PLAYER_NAME"],
                                 d[typeof this.state.uniqKeys.filter(k => k["selectedP3"])[0] !== "undefined" ?this.state.uniqKeys.filter(k => k["selectedP3"])[0].option:"REB"]])}
 
 
@@ -754,26 +610,7 @@ class Main1 extends Component {
 
 
 				</div>
-                {/* <div  key="5" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:12 , x: halfwidth , y: r1h, minW: 2, minH: 1 }}>
-
-                    <h2>BarChart</h2>
-                   
-
-
-				</div> */}
-  
-
-                {/* <div  key="7" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:20 , x: halfwidth + qwidth, y: r1h, minW: 2, minH: 1 }}> */}
-                {/* <div  key="7" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:20 , x: halfwidth + qwidth-0.2, y: r1h+24, minW: 2, minH: 1 }}> */}
-                    
-					{/* <h2>P1</h2> */}
-
-                    
-
-				{/* </div> */}
-
-
-      
+   
    
                 
 
@@ -800,11 +637,6 @@ class Main1 extends Component {
 						))
 					}
 				</div>
-
-
-              
-
-			  
 
             </div>
 

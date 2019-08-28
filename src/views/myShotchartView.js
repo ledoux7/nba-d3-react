@@ -8,8 +8,6 @@ import Dropdown from '../components/Dropdown';
 import MultiDropdown from '../components/MultiDropdown';
 import Scatterplot from "../graphs/Scatterplot"
 // import BarChart from "../graphs/BarChart"
-
-import Datapoint from "../components/Datapoint"
 import RangeSlider from "../components/RangeSlider"
 import SingleSlider from "../components/singleSlider"
 import VertSlider from "../components/VertSlider"

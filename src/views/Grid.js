@@ -4,29 +4,21 @@ import React, { Component } from 'react';
 import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
 import { WidthProvider} from "react-grid-layout";
 
-
-
-
-
-import BarChart from '../graphs/BarChart'
 import { CONFIG } from '../config.js';
 import * as d3 from "d3";
 import axios from 'axios'
-import Dropdown from '../components/Dropdown';
+
 import MultiDropdown from '../components/MultiDropdown';
-import Scatterplot from "../graphs/Scatterplot"
 // import BarChart from "../graphs/BarChart"
 
-import Datapoint from "../components/Datapoint"
+
 import RangeSlider from "../components/RangeSlider"
-import SingleSlider from "../components/singleSlider"
-import VertSlider from "../components/VertSlider"
+
 
 // import Shotchart from "../graphs/Shotchart"
 import Shotchart from "../graphs/myShotChart"
 import DonutChart from "../graphs/DonutChart"
 
-import {Container,Col,Row} from 'react-bootstrap'
 
 const ResponsiveReactGridLayout = WidthProvider(ResponsiveGridLayout );
 const originalLayouts = getFromLS("layouts") || {};
@@ -190,23 +182,6 @@ class Main1 extends Component {
 
 	}
 
-	resetThenSet = (value, key) => {
-		let data = [...this.state[key]];
-		data.forEach(item => item.selected = false);
-		data[value].selected = true;
-
-
-		this.setState({ key: data });
-
-	}
-
-	filterAndSort_Laps = (selectedRace, selectedSeason, laptimes, filtQ) => {
-
-		var filtered = laptimes.filter(d => (d.raceName === selectedRace.raceName && d.season === selectedSeason.season))
-		return filtered
-
-	}
-
 
 	toggleSelected = (id, key, uniqList, listid, selCol, singleMode) => {
         if (singleMode) {
@@ -222,15 +197,7 @@ class Main1 extends Component {
             temp.forEach(function myFunction(item, index, arr) {
                 // arr[index] = item * 10;
                 if (arr[index].id === id) {
-                    // temp[index].selected = !temp[index].selected
                     temp[index][selCol] = !temp2[index][selCol]
-                    // temp[index][selCol]= !this.state[key][index][selCol]
-
-
-                    // temp[index][selCol]= !temp2[key][index][selCol]
-                    // temp[index][selCol]= true;
-
-
                 }
 
             })
@@ -239,12 +206,8 @@ class Main1 extends Component {
             // uniqList[listid][selCol] = true; // !uniqList[listid][selCol]
             this.setState({
                 [key]: temp,
-                // uniqList: uniqList
             })
-
-
         }
-
 
         else {
             // deep copy
@@ -290,15 +253,6 @@ class Main1 extends Component {
 		})
 	}
 
-	// handleDistChange1(year1, year2) {
-	// 	this.setState({
-	// 		left: year1,
-	// 		right: year2,
-
-	// 	})
-	// }
-
-
 	handleMinDist(x) {
 		this.setState({
 			left: x,
@@ -339,26 +293,7 @@ class Main1 extends Component {
 	
 	handleShotTypeChange(type, add,reset,arr) 
     {
-        // if (reset === "reset")
-        // {
-        //     this.setState({
-        //         [arr]: []
 
-        //     })
-        // }
-        
-        // else if (add) {
-        //     this.setState({
-		// 		[arr]: this.state[arr].concat([type])
-
-        //     })
-        // }
-        // else {
-        //     this.setState({
-		// 		[arr]: this.state[arr].filter((ele, i) => ele !== type)
-        //     })
-
-		// }
 		if (arr === "selShotTypes")
 		{
 			if (reset === "reset")
@@ -448,8 +383,6 @@ class Main1 extends Component {
         var agg = []
         if (df.length > 0) {
             uniqList.forEach(function myFunction(item, index, arr) {
-                // arr[index] = item * 10;
-                // uniqList = uniqList.filter((item, index) => uniqIds.includes(item.id))
 
                 var p = df.filter((player, index) => player[selCol] === item)
                 if (p.length > 0) {
@@ -479,8 +412,6 @@ class Main1 extends Component {
 
 	render() {
 
-		// const names = this.state.shotlog.map(post => post.firstname)
-		// const { fnames, shotlog, uniqList } = this.state
         const { fnames, shotlog, uniqList, sumFGA, uniqShotTypes,dist } = this.state
 
 

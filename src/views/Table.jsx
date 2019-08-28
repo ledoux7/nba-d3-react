@@ -1,40 +1,16 @@
 import React, { Component } from 'react';
 
 import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
-import { WidthProvider} from "react-grid-layout";
+import { WidthProvider } from "react-grid-layout";
 
-import BarChart from '../graphs/BarChart'
 import { CONFIG } from '../config.js';
 import * as d3 from "d3";
 import axios from 'axios'
-import Dropdown from '../components/Dropdown';
-import MultiDropdown from '../components/MultiDropdown';
-// import Dropdown from '../components/Dropdown';
 
-import Scatterplot from "../graphs/Scatterplot"
-// import BarChart from "../graphs/BarChart"
-
-import Datapoint from "../components/Datapoint"
-import RangeSlider from "../components/RangeSlider"
-import SingleSlider from "../components/singleSlider"
-import VertSlider from "../components/VertSlider"
-
-// import Shotchart from "../graphs/Shotchart"
-import Shotchart from "../graphs/myShotChart"
-
-import {Container,Col,Row,Table} from 'react-bootstrap'
+import { Table } from 'react-bootstrap'
 
 
-// import FeatureFour from "../graphs/Bubble1"
-import Pie from "../graphs/PieChart"
-import DonutChart from "../graphs/DonutChart"
-
-
-// import AnimatedPieHooks from "./AnimatedPieHooks";
-
-
-const ResponsiveReactGridLayout = WidthProvider(ResponsiveGridLayout );
-// const originalLayouts = getFromLS("layouts") || {};
+const ResponsiveReactGridLayout = WidthProvider(ResponsiveGridLayout);
 
 
 const formatDec = d3.format(".2f")
@@ -45,30 +21,30 @@ class Main1 extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-            shotlog: [],
+			shotlog: [],
 			stats: [],
-            
-            uniqList: [],
-            uniqShotTypes: [],
-            selShotTypes:[],
-            // selShotTypes:["Jump Shot", "Step Back Jump shot" ,"Running Jump shot","Pullup Jump shot","Driving Layup"],
-            numberKeys: [],
-            uniqKeys:[],
-            uniqTeams:[],
+
+			uniqList: [],
+			uniqShotTypes: [],
+			selShotTypes: [],
+			// selShotTypes:["Jump Shot", "Step Back Jump shot" ,"Running Jump shot","Pullup Jump shot","Driving Layup"],
+			numberKeys: [],
+			uniqKeys: [],
+			uniqTeams: [],
 
 
 			wholePts: [],
 			wholeAst: [],
 			test: [],
 			response: [],
-            bardata: [12, 25, 6, 6, 9, 10],
-            
+			bardata: [12, 25, 6, 6, 9, 10],
+
 
 
 			// data: d3.range(100).map(_ => [Math.random(), Math.random()]),
 			data: [[0.1, 0.2], [0.3, 0.2], [4, 2], [4, 1]],
 			minCount: 1,
-			chartType: 'scatter' ,//'hexbin', // 'scatter'
+			chartType: 'scatter',//'hexbin', // 'scatter'
 			// chartType: 'hexbin', // 'scatter'
 
 			displayToolTips: true,
@@ -83,9 +59,9 @@ class Main1 extends Component {
 			distR: 35,
 
 			dist2L: 0,
-            dist2R: 35,
-            
-            sumFGA: [],
+			dist2R: 35,
+
+			sumFGA: [],
 
 		};
 		this.handleClick = this.handleClick.bind(this);
@@ -98,291 +74,186 @@ class Main1 extends Component {
 		// const shotlogReq = axios.get(CONFIG.SHOTS)
 		// 	.then(response =>
 		// 		response.data
-        //     ).then(shotlog => this.setDefault(shotlog))
-            
-        const playerStatsReq = axios.get(CONFIG.STATS)
+		//     ).then(shotlog => this.setDefault(shotlog))
+
+		const playerStatsReq = axios.get(CONFIG.STATS)
 			.then(response =>
 				response.data
 			).then(stats => this.setDefaultStats(stats))
 
-    }
-    
-    setDefaultStats = (stats) => 
-    {
+	}
+
+	setDefaultStats = (stats) => {
 		stats.map(i => i.key = "stats");
-        stats.map((p, i) => p.selectedP1 = false);
-        stats.map((p, i) => p.selectedP2 = false);
-        stats.map((p, i) => p.id = p.PLAYER_ID);
-        stats.map((p, i) => p.listid = i);
+		stats.map((p, i) => p.selectedP1 = false);
+		stats.map((p, i) => p.selectedP2 = false);
+		stats.map((p, i) => p.id = p.PLAYER_ID);
+		stats.map((p, i) => p.listid = i);
 
-        
 
-        
 
-        const uniqNames = [...new Set(stats.map(d => d.PLAYER_NAME))]
-        // this.setState({ , uniqShotTypes: uniqShotTypes })
-        var uniqList = stats.map((p, index) => ({
+
+
+		const uniqNames = [...new Set(stats.map(d => d.PLAYER_NAME))]
+		// this.setState({ , uniqShotTypes: uniqShotTypes })
+		var uniqList = stats.map((p, index) => ({
 			option: p["PLAYER_NAME"],
-            id: p["PLAYER_ID"],
-            listid: index,
+			id: p["PLAYER_ID"],
+			listid: index,
 			// selectedP1: true,
-            // selectedP2: true,
-            selectedP1: false,
+			// selectedP2: true,
+			selectedP1: false,
 			selectedP2: false,
 			key: "stats"
-        }))
+		}))
 
-        var keys = Object.keys(stats[0])
-        var numberKeys =[]
+		var keys = Object.keys(stats[0])
+		var numberKeys = []
 
-        // stats.forEach(function myFunction(item, index, arr) 
-        for (var i=0;i<keys.length;i++)
-        {
-            // arr[index] = item * 10;
-            if ( (typeof stats[0][keys[i]] === "number") && isFinite(stats[0][keys[i]])) 
-            {
-                numberKeys.push(keys[i])
-            }
-        }
-        numberKeys = numberKeys.slice(0,4)
+		// stats.forEach(function myFunction(item, index, arr) 
+		for (var i = 0; i < keys.length; i++) {
+			// arr[index] = item * 10;
+			if ((typeof stats[0][keys[i]] === "number") && isFinite(stats[0][keys[i]])) {
+				numberKeys.push(keys[i])
+			}
+		}
+		numberKeys = numberKeys.slice(0, 4)
 
-        var uniqKeys = numberKeys.map((k, index) => ({
+		var uniqKeys = numberKeys.map((k, index) => ({
 			option: k,
-            id: index,
-            listid: index,
+			id: index,
+			listid: index,
 			// selectedP1: true,
-            // selectedP2: true,
-            selectedP1: false,
+			// selectedP2: true,
+			selectedP1: false,
 			selectedP2: false,
 			key: "uniqKeys"
-        }))
+		}))
 
-        var uniqTeams = [...new Set(stats.map(d => d.TEAM_NAME))]
+		var uniqTeams = [...new Set(stats.map(d => d.TEAM_NAME))]
 
-        uniqTeams = uniqTeams.map((k, index) => ({
+		uniqTeams = uniqTeams.map((k, index) => ({
 			option: k,
-            id: index,
-            listid: index,
+			id: index,
+			listid: index,
 			// selectedP1: true,
-            // selectedP2: true,
-            selectedP1: false,
+			// selectedP2: true,
+			selectedP1: false,
 			selectedP2: false,
 			key: "uniqTeams"
-        }))
+		}))
 
 
-        uniqKeys.map((p, i) => {
+		uniqKeys.map((p, i) => {
 			if (p.option === "PTS") { p["selectedP1"] = true; }
 		})
 
-        // uniqTeams = uniqTeams.filter((item, index) => uniqIds.includes(item.id))
+		// uniqTeams = uniqTeams.filter((item, index) => uniqIds.includes(item.id))
 		// // uniqList = uniqList.filter((item,index)=> uniqList.id.indexOf(item.id)===index)                                           
 		// uniqTeams = uniqTeams.filter((uniqTeams, index, self) =>
 		// 	index === self.findIndex((t) => (t.id === uniqTeams.id)))
 
-        //     uniqTeams.map((p, i) => p.listid = i);
+		//     uniqTeams.map((p, i) => p.listid = i);
 
-        // uniqTeams.map((p, i) => p.selectedP1 = true);
-        // uniqList.map((p, i) => p.selectedP1 = true);
-        // uniqList.map((p, i) => p.selectedP2 = true);
+		// uniqTeams.map((p, i) => p.selectedP1 = true);
+		// uniqList.map((p, i) => p.selectedP1 = true);
+		// uniqList.map((p, i) => p.selectedP2 = true);
 
-        // stats.map((p, i) => p.selectedP1 = true);
-        // stats.map((p, i) => p.selectedP2 = true);
+		// stats.map((p, i) => p.selectedP1 = true);
+		// stats.map((p, i) => p.selectedP2 = true);
 
-        // .map((p, i) => p.selectedP1 = true);
+		// .map((p, i) => p.selectedP1 = true);
 
 
 		this.setState({ stats: stats, uniqList: uniqList, numberKeys: numberKeys, uniqKeys: uniqKeys, uniqTeams: uniqTeams })
-        
-    
-    }
-
-
-
-	setDefault = (shotlog) => {
-
-		shotlog.map(i => i.key = "shotlog");
-
-		// shotlog.map((p, i) => {
-		// 	if (p.PLAYER_NAME === "Stephen Curry") { p["selectedP1"] = true; }
-		// })
-		// shotlog.map((p, i) => {
-		// 	if (p.PLAYER_NAME === "Giannis") { p["selectedP2"] = true; }
-        // })
-        
-        // shotlog.map((p, i) => p.selectedP1 = true);
-        shotlog.map((p, i) => p.selectedP1 = false);
-		shotlog.map((p, i) => p.selectedP2 = true);
-        
-
-		shotlog.map((p, i) => p.id = p.PLAYER_ID);
-        shotlog.map((p, i) => p.shotid = i);
-
-        shotlog.map((p, i) => p.x = (p.LOC_X + 250) / 10);
-        shotlog.map((p, i) => p.y = (p.LOC_Y + 50) / 10);
-
-
-      
-    
-
-        const uniqNames = [...new Set(shotlog.map(d => d.PLAYER_NAME))]
-
-		this.setState({ shotlog: shotlog })
-
-
-        var uniqShotTypes = [...new Set(shotlog.map(d => d.SHOT_TYPE))]
-        // uniqShotTypes = uniqShotTypes.slice(0,5)
-
-		var uniqIds = [...new Set(shotlog.map(d => d.PLAYER_ID))]
-		var uniqList = shotlog.map((p, index) => ({
-			option: p["PLAYER_NAME"],
-            id: p["PLAYER_ID"],
-            
-			// selectedP1: true,
-            selectedP2: true,
-            selectedP1: false,
-			// selectedP2: false,
-			key: "shotlog"
-		}))
-
-		uniqList = uniqList.filter((item, index) => uniqIds.includes(item.id))
-		// uniqList = uniqList.filter((item,index)=> uniqList.id.indexOf(item.id)===index)                                           
-		uniqList = uniqList.filter((uniqList, index, self) =>
-			index === self.findIndex((t) => (t.id === uniqList.id)))
-
-		uniqList.map((p, i) => p.listid = i);
-
-        this.setState({ uniqList: uniqList, uniqShotTypes: uniqShotTypes })
-
-
-        var agg = []
-        uniqList.forEach(function myFunction(item, index, arr) 
-        {
-            var p = shotlog.filter((player, index) => player.id === item.id)
-
-            var sumplayer = p.map(item => item.FGM).reduce((prev, next) => prev + next);
-            agg[index] = {pid: item.id,player: item.option, sumPlayer: sumplayer}
-        
-        })
-
-        this.setState({ sumFGA: agg})
-        
 
 
 	}
 
-    toggleSingleDropDown = (value, key) => 
-    {
-		let data = [...this.state[key]];
-		data.forEach(item => item.selected = false);
-		data[value].selected = true;
 
 
-		this.setState({ key: data });
+
+
+
+	toggleSelected = (id, key, uniqList, listid, selCol, singleMode) => {
+		if (singleMode) {
+			// deep copy
+			let temp = JSON.parse(JSON.stringify(this.state[key]))
+			let temp2 = JSON.parse(JSON.stringify(this.state[key]))
+
+
+			temp.map(d => d[selCol] = false)
+			uniqList.map(d => d[selCol] = false)
+
+
+			temp.forEach(function myFunction(item, index, arr) {
+				// arr[index] = item * 10;
+				if (arr[index].id === id) {
+					temp[index][selCol] = !temp2[index][selCol]
+				}
+
+			})
+			uniqList[listid][selCol] = !uniqList[listid][selCol]
+
+			// uniqList[listid][selCol] = true; // !uniqList[listid][selCol]
+			this.setState({
+				[key]: temp,
+				// uniqList: uniqList
+			})
+
+		}
+
+
+		else {
+			// deep copy
+			let temp = JSON.parse(JSON.stringify(this.state[key]))
+
+			temp.forEach(function myFunction(item, index, arr) {
+				// arr[index] = item * 10;
+				if (arr[index].id === id) {
+					// temp[index].selected = !temp[index].selected
+					temp[index][selCol] = !temp[index][selCol]
+
+				}
+
+			})
+			uniqList[listid][selCol] = !uniqList[listid][selCol]
+			this.setState({
+				[key]: temp
+			})
+
+		}
 
 	}
 
-	filterAndSort_Laps = (selectedRace, selectedSeason, laptimes, filtQ) => {
-
-		var filtered = laptimes.filter(d => (d.raceName === selectedRace.raceName && d.season === selectedSeason.season))
-		return filtered
-
+	hei1(id, key, uniqList, listid, selCol) {
+		var fuckyou = 1
 	}
 
-
-    toggleSelected = (id, key,uniqList,listid,selCol, singleMode) => 
-    {
-        if (singleMode)
-                    {
-            // deep copy
-            let temp = JSON.parse(JSON.stringify(this.state[key]))
-            let temp2 = JSON.parse(JSON.stringify(this.state[key]))
-
-            
-            temp.map(d => d[selCol] = false)
-            uniqList.map(d => d[selCol] = false)
+	hei(id, key, uniqList, listid, selCol) {
+		// deep copy
+		let temp = JSON.parse(JSON.stringify(this.state[key]))
+		// let temp2 = JSON.parse(JSON.stringify(this.state[key]))
 
 
-            temp.forEach(function myFunction(item, index, arr) {
-                // arr[index] = item * 10;
-                if (arr[index].id === id) {
-                    // temp[index].selected = !temp[index].selected
-                    temp[index][selCol]= !temp2[index][selCol]
-                    // temp[index][selCol]= !this.state[key][index][selCol]
-
-                    
-                    // temp[index][selCol]= !temp2[key][index][selCol]
-                    // temp[index][selCol]= true;
-                    
-
-                }
-
-            })
-            uniqList[listid][selCol] = !uniqList[listid][selCol]
-            
-            // uniqList[listid][selCol] = true; // !uniqList[listid][selCol]
-            this.setState({
-                [key]: temp,
-                // uniqList: uniqList
-            })
-
-                            
-        }
-
-
-        else
-        {
-         // deep copy
-         let temp = JSON.parse(JSON.stringify(this.state[key]))
-
-         temp.forEach(function myFunction(item, index, arr) {
-             // arr[index] = item * 10;
-             if (arr[index].id === id) {
-                 // temp[index].selected = !temp[index].selected
-                 temp[index][selCol]= !temp[index][selCol]
-
-             }
-
-         })
-         uniqList[listid][selCol] = !uniqList[listid][selCol]
-         this.setState({
-             [key]: temp
-         })
-
-        }
-        
-    }
-    
-    hei1 (id, key,uniqList,listid,selCol) 
-    {
-        var fuckyou=1
-    }
-    
-    hei (id, key,uniqList,listid,selCol) 
-    {
-        // deep copy
-        let temp = JSON.parse(JSON.stringify(this.state[key]))
-        // let temp2 = JSON.parse(JSON.stringify(this.state[key]))
-
-        
-        temp.map(d => d[selCol] = false)
-        uniqList.map(d => d[selCol] = false)
+		temp.map(d => d[selCol] = false)
+		uniqList.map(d => d[selCol] = false)
 
 
 		temp.forEach(function myFunction(item, index, arr) {
 			// arr[index] = item * 10;
 			if (arr[index].id === id) {
 				// temp[index].selected = !temp[index].selected
-                temp[index][selCol]= !temp[index][selCol]
-                // temp[index][selCol]= !temp2[key][index][selCol]
-                // temp[index][selCol]= true;
-                
+				temp[index][selCol] = !temp[index][selCol]
+				// temp[index][selCol]= !temp2[key][index][selCol]
+				// temp[index][selCol]= true;
+
 
 			}
 
-        })
+		})
 		// uniqList[listid][selCol] = !uniqList[listid][selCol]
-        
+
 		uniqList[listid][selCol] = true; // !uniqList[listid][selCol]
 		this.setState({
 			[key]: temp
@@ -416,27 +287,24 @@ class Main1 extends Component {
 		this.setState({
 			minCount: x
 		})
-    }
-    
-    handleShotTypeChange(type,add) 
-    {
-        if(add)
-        {
-            this.setState({
-                selShotTypes: this.state.selShotTypes.concat([type])
-                
-            })
-        }
-        else
-        {
-            this.setState({
-                selShotTypes: this.state.selShotTypes.filter((ele, i) => ele !== type)
-            })
-            
-        }
+	}
 
-        
-        
+	handleShotTypeChange(type, add) {
+		if (add) {
+			this.setState({
+				selShotTypes: this.state.selShotTypes.concat([type])
+
+			})
+		}
+		else {
+			this.setState({
+				selShotTypes: this.state.selShotTypes.filter((ele, i) => ele !== type)
+			})
+
+		}
+
+
+
 
 	}
 
@@ -461,218 +329,156 @@ class Main1 extends Component {
 
 
 
-    }
-    
-    resetLayout() {
-        this.setState({ layouts: {} });
-      }
-    
-      onLayoutChange(layout, layouts) {
-        // saveToLS("layouts", layouts);
-        this.setState({ layouts });
-      }
-    
+	}
+
+	resetLayout() {
+		this.setState({ layouts: {} });
+	}
+
+	onLayoutChange(layout, layouts) {
+		// saveToLS("layouts", layouts);
+		this.setState({ layouts });
+	}
+
 
 
 	render() {
 
 		// const names = this.state.shotlog.map(post => post.firstname)
-		const { fnames, stats, uniqList , sumFGA, uniqShotTypes} = this.state
-
-		var ab = stats.filter((p) => (p["selectedP1"] === true))
-
-
-		ab = ab.filter((p) => (p.SHOT_DIST >= this.state.distL) && (p.SHOT_DIST <= this.state.distR))
-
-
-		var dist = stats.map(post => (post.SHOT_DIST))
-		// var wholeAst = stats.map(p => ((p.LOC_X+250)/10))
-		// var wholePts = stats.map(p => (p.LOC_Y+50)/10)
-
-
-		// var xloc = ab.map(post => (post.LOC_X))
-		// var yloc = ab.map(post => (post.LOC_Y))
-
-
+		const { fnames, stats, uniqList, sumFGA, uniqShotTypes } = this.state
 		var binrange = [1, 20]
 
-		var testt = [0,124,300]
+		var testt = [0, 124, 300]
 
-		
+
 		var r1h = 9
 		var r2h = 10
 		var fullwidth = 12
-        var halfwidth = fullwidth/2
-        var qwidth = halfwidth/2
-        var colsize = 12
+		var halfwidth = fullwidth / 2
+		var qwidth = halfwidth / 2
+		var colsize = 12
 
 
 
-
-        // var gh = ab.map(post => (post.id))
-        // var piedata = sumFGA.filter((p) => gh.includes(p.pid) )
-
-        var agg = []
-        if (ab.length > 0)
-        {
-            uniqShotTypes.forEach(function myFunction(item, index, arr) 
-            {
-                // arr[index] = item * 10;
-                // uniqList = uniqList.filter((item, index) => uniqIds.includes(item.id))
-
-                var p = ab.filter((player, index) => player.SHOT_TYPE === item)
-                if (p.length > 0)
-                {
-                    var sumplayer = p.map(item => item.FGA).reduce((prev, next) => prev + next);
-                    agg[index] = {SHOT_TYPE: item, sumShotType: sumplayer}
-            
-                }
-                
-            })
-
-            agg = agg.filter((shot, index)=> shot.sumShotType > 5)
-            agg = agg.sort((a,b) => (a.sumShotType < b.sumShotType) ? 1 : ((b.sumShotType < a.sumShotType) ? -1 : 0));
-            // if (this.state.selShotTypes.length > 0)
-            // {
-            //     agg = agg.filter((shot, index)=>  this.state.selShotTypes.includes(shot.player))
-
-            // }
-            agg = agg.slice(0,6)
-
-
-        } 
-
-        if (this.state.selShotTypes.length > 0)
-        {
-            ab = ab.filter((shot, index)=>  this.state.selShotTypes.includes(shot.SHOT_TYPE))
-            // abc = abc.slice(0,6)
-        }
-
-
-        var p1 = ab.filter((shot, index)=> shot.selectedP1 === true)
-        var p2 = ab.filter((shot, index)=> shot.selectedP2 === true)
-
-
-
-          return (
-            <div style={{ background: '#57667B',color:"white" }}> 
+		return (
+			<div style={{ background: '#57667B', color: "white" }}>
 
 				<ResponsiveReactGridLayout
 					className="layout"
-					breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
+					breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
 					// cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
 					cols={{ lg: colsize, md: colsize, sm: colsize, xs: colsize, xxs: colsize }}
-					
-					rowHeight={30}
-                    layouts={this.state.layouts}
-                    margin={[10,10]}
-                    verticalCompact={false}
-                    horizontalCompact={false}
-                    preventCollision={false}
 
-                    autoSize={true}
-                    containerPadding={[1,1]}
-                    // margin={[0,0]}
+					rowHeight={30}
+					layouts={this.state.layouts}
+					margin={[10, 10]}
+					verticalCompact={false}
+					horizontalCompact={false}
+					preventCollision={false}
+
+					autoSize={true}
+					containerPadding={[1, 1]}
+					// margin={[0,0]}
 
 					onLayoutChange={(layout, layouts) =>
-					this.onLayoutChange(layout, layouts)
+						this.onLayoutChange(layout, layouts)
 					}
-              	>
-                <div key="1" style={{ background: '#455162' }} data-grid={{ w: halfwidth, h: 10, x: 0, y: 0, minW: 2, minH: 1, static: true }}>
-                        <div  style={{ "margin-left":"20px","margin-top":"20px","margin-right":"20px",  "font-family": "sans-serif", "text-align": "center"  }}>
+				>
+					<div key="1" style={{ background: '#455162' }} data-grid={{ w: halfwidth, h: 10, x: 0, y: 0, minW: 2, minH: 1, static: true }}>
+						<div style={{ "margin-left": "20px", "margin-top": "20px", "margin-right": "20px", "font-family": "sans-serif", "text-align": "center" }}>
 
-					<Table bordered striped style={{color:"white"}}>
-
-
-						<thead>
-							<tr>
-							<th> </th>
-							{
-									this.state.stats.map(s => (
-										<th> {s.PLAYER_NAME}</th>
-									
-									))
+							<Table bordered striped style={{ color: "white" }}>
 
 
-								}
+								<thead>
+									<tr>
+										<th> </th>
+										{
+											this.state.stats.map(s => (
+												<th> {s.PLAYER_NAME}</th>
 
-							
-							{/* <th>Last Name</th>
+											))
+
+
+										}
+
+
+										{/* <th>Last Name</th>
 							<th>Username</th> */}
-							</tr>
-						</thead>
-						<tbody>
+									</tr>
+								</thead>
+								<tbody>
 
-							<tr>
+									<tr>
 
-								<td>PTS</td>
-								{
-									this.state.stats.map(s => (
-										<td> {formatDec(s.PTS)}</td>
-									
-									))
+										<td>PTS</td>
+										{
+											this.state.stats.map(s => (
+												<td> {formatDec(s.PTS)}</td>
+
+											))
 
 
-								}
-							{/* <td>Mark</td>
+										}
+										{/* <td>Mark</td>
 							<td>Otto</td>
 							<td>@mdo</td> */}
-							</tr>
+									</tr>
 
 
 
-							<tr>
-								<td>REB</td>
-								{
-									this.state.stats.map(s => (
-										<td> {formatDec(s.REB)}</td>
-									
-									))
+									<tr>
+										<td>REB</td>
+										{
+											this.state.stats.map(s => (
+												<td> {formatDec(s.REB)}</td>
+
+											))
 
 
-								}
-							
-							</tr>
-							<tr>
-							<td>AST</td>
-								{
-									this.state.stats.map(s => (
-										<td> {formatDec(s.AST)}</td>
-									
-									))
+										}
+
+									</tr>
+									<tr>
+										<td>AST</td>
+										{
+											this.state.stats.map(s => (
+												<td> {formatDec(s.AST)}</td>
+
+											))
 
 
-								}
-							
-							</tr>
-							<tr>
-							<td>3PA</td>
-								{
-									this.state.stats.map(s => (
-										<td> {formatDec(s.FG3A)}</td>
-									
-									))
+										}
+
+									</tr>
+									<tr>
+										<td>3PA</td>
+										{
+											this.state.stats.map(s => (
+												<td> {formatDec(s.FG3A)}</td>
+
+											))
 
 
-								}
-							
-							</tr>
-						</tbody>
-						</Table>
+										}
+
+									</tr>
+								</tbody>
+							</Table>
 
 
-                	</div>
-                </div>
+						</div>
+					</div>
 
-      
-      
-      
 
-              </ResponsiveReactGridLayout>
-			  <div>
+
+
+
+				</ResponsiveReactGridLayout>
+				<div>
 					{
 						// this.state.players.map(post => (
-						[0,0,0,0,0,0,0].map(post => (
+						[0, 0, 0, 0, 0, 0, 0].map(post => (
 
 							<li align="start">
 								<div>
@@ -685,19 +491,19 @@ class Main1 extends Component {
 								</div>
 							</li>
 
-							
+
 						))
 					}
 				</div>
 
-              
-
-			  
-
-            </div>
 
 
-          );
+
+
+			</div>
+
+
+		);
 
 
 	}

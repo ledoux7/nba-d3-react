@@ -18,8 +18,8 @@ library.add(faCheck, faAngleUp, faAngleDown)
 
 
 const App = () => (
-  // <div className="App" style={{ background: '#57667B' }} >
-  <div className="App"  >
+  <div className="App" style={{ background: '#57667B' }} >
+  {/* // <div className="App"  > */}
 
     <Header />
     <Main />

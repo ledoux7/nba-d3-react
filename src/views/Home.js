@@ -7,29 +7,18 @@ import BarChart from '../graphs/BarChart'
 import { CONFIG } from '../config.js';
 import * as d3 from "d3";
 import axios from 'axios'
-import Dropdown from '../components/Dropdown';
 import MultiDropdown from '../components/MultiDropdown';
-import Scatterplot from "../graphs/Scatterplot"
-// import BarChart from "../graphs/BarChart"
 
-import Datapoint from "../components/Datapoint"
+// import BarChart from "../graphs/BarChart"
+import {Table} from 'react-bootstrap'
+
 import RangeSlider from "../components/RangeSlider"
-import SingleSlider from "../components/singleSlider"
-import VertSlider from "../components/VertSlider"
+
 
 // import Shotchart from "../graphs/Shotchart"
 import Shotchart from "../graphs/myShotChart"
 
-import { Container, Col, Row, Table } from 'react-bootstrap'
-
-
-// import FeatureFour from "../graphs/Bubble1"
-import Pie from "../graphs/PieChart"
 import DonutChart from "../graphs/DonutChart"
-
-
-// import AnimatedPieHooks from "./AnimatedPieHooks";
-
 
 const ResponsiveReactGridLayout = WidthProvider(ResponsiveGridLayout);
 // const originalLayouts = getFromLS("layouts") || {};
@@ -59,9 +48,6 @@ class Main1 extends Component {
             response: [],
             bardata: [12, 25, 6, 6, 9, 10],
 
-
-
-            // data: d3.range(100).map(_ => [Math.random(), Math.random()]),
             data: [[0.1, 0.2], [0.3, 0.2], [4, 2], [4, 1]],
             minCount: 1,
             // chartType: 'scatter',//'hexbin', // 'scatter'
@@ -185,23 +171,6 @@ class Main1 extends Component {
 
     }
 
-    toggleSingleDropDown = (value, key) => {
-        let data = [...this.state[key]];
-        data.forEach(item => item.selected = false);
-        data[value].selected = true;
-
-
-        this.setState({ key: data });
-
-    }
-
-    filterAndSort_Laps = (selectedRace, selectedSeason, laptimes, filtQ) => {
-
-        var filtered = laptimes.filter(d => (d.raceName === selectedRace.raceName && d.season === selectedSeason.season))
-        return filtered
-
-    }
-
 
     toggleSelected = (id, key, uniqList, listid, selCol, singleMode) => {
         if (singleMode) {
@@ -217,15 +186,8 @@ class Main1 extends Component {
             temp.forEach(function myFunction(item, index, arr) {
                 // arr[index] = item * 10;
                 if (arr[index].id === id) {
-                    // temp[index].selected = !temp[index].selected
                     temp[index][selCol] = !temp2[index][selCol]
-                    // temp[index][selCol]= !this.state[key][index][selCol]
-
-
-                    // temp[index][selCol]= !temp2[key][index][selCol]
-                    // temp[index][selCol]= true;
-
-
+  
                 }
 
             })
@@ -604,20 +566,6 @@ class Main1 extends Component {
                         {/* <div  style={{ "margin-left":"20px","margin-top":"20px",  "font-family": "sans-serif", "text-align": "center"  }}> */}
                         <div>
 
-                            {/* {piedata} */}
-                            {/* <span className="label">Animated Pie Hooks (D3 animations)</span> */}
-                            {/* <Pie
-                        data={piedata}
-                        fake={piecopy}
-                        width={200}
-                        height={200}
-                        innerRadius={60}
-                        outerRadius={100}
-                        /> */}
-
-
-                            {/* <Table striped bordered hover variant="dark"> */}
-                            {/* <Table striped bordered hover > */}
                             <Table borderless striped style={{ color: "white" }}>
 
 

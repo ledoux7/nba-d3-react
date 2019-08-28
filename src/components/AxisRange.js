@@ -78,4 +78,4 @@ class Axis extends Component {
   }
 }
 
-export default Axis;
+// export default Axis;
