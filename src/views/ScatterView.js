@@ -742,9 +742,9 @@ class Main1 extends Component {
                           height={400}
                           padding={30}
                         //   xCol={"PTS"}
-                          xCol={typeof this.state.uniqKeys.filter(k => k["selectedP1"])[0] !== "undefined" ?this.state.uniqKeys.filter(k => k["selectedP2"])[0].option:"PTS" }
+                          xCol={typeof this.state.uniqKeys.filter(k => k["selectedP2"])[0] !== "undefined" ?this.state.uniqKeys.filter(k => k["selectedP2"])[0].option:"PTS" }
 
-                          yCol={typeof this.state.uniqKeys.filter(k => k["selectedP2"])[0] !== "undefined" ?this.state.uniqKeys.filter(k => k["selectedP3"])[0].option:"REB" }
+                          yCol={typeof this.state.uniqKeys.filter(k => k["selectedP3"])[0] !== "undefined" ?this.state.uniqKeys.filter(k => k["selectedP3"])[0].option:"REB" }
               
 
                           
