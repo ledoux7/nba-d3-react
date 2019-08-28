@@ -64,8 +64,8 @@ class Main1 extends Component {
             // data: d3.range(100).map(_ => [Math.random(), Math.random()]),
             data: [[0.1, 0.2], [0.3, 0.2], [4, 2], [4, 1]],
             minCount: 1,
-            chartType: 'scatter',//'hexbin', // 'scatter'
-            // chartType: 'hexbin', // 'scatter'
+            // chartType: 'scatter',//'hexbin', // 'scatter'
+            chartType: 'hexbin', // 'scatter'
 
             displayToolTips: true,
 
@@ -101,7 +101,7 @@ class Main1 extends Component {
 
     setDefault = (shotlog) => {
 
-        shotlog =shotlog.slice(0,1250)
+        shotlog =shotlog.slice(0,1000)
         shotlog.map(i => i.key = "shotlog");
 
         // shotlog.map((p, i) => {
@@ -323,13 +323,17 @@ class Main1 extends Component {
     handleClick() {
         // let {margins,data,svgDimensions,onChangeYear,xScale,initialValue, other} = prevProps;
         // let {margins,data,svgDimensions,onChangeYear,xScale,initialValue, other} = this.props;
-        if (this.state.isToggleOn === false) {
+        if (this.state.isToggleOn === true) {
+        // if (this.state.isToggleOn === false) {
+
             this.setState({
                 isToggleOn: !this.state.isToggleOn,
                 chartType: 'scatter'
             })
         }
-        else if (this.state.isToggleOn === true) {
+        else if (this.state.isToggleOn === false) {
+        // else if (this.state.isToggleOn === true) {
+
             this.setState({
                 isToggleOn: !this.state.isToggleOn,
                 chartType: 'hexbin'
@@ -471,8 +475,8 @@ class Main1 extends Component {
 
                 <div>
                     <button onClick={this.handleClick} className="white" style={{ "margin-left": "10px" }} >
-                        {/* {this.state.isToggleOn ?  'Scatter': 'Hexbin'} */}
-                        {this.state.isToggleOn ? 'Hexbin' : 'Scatter'}
+                        {this.state.isToggleOn ?  'Scatter': 'Hexbin'}
+                        {/* {this.state.isToggleOn ? 'Hexbin' : 'Scatter'} */}
 
                     </button>
 
@@ -571,8 +575,8 @@ class Main1 extends Component {
                                     uniqList={this.state.uniqTeams}
                                     toggleItem={this.toggleSelected}
 
-                                    // singleMode={false}
-                                    singleMode={true}
+                                    singleMode={false}
+                                    // singleMode={true}
 
                                     maxwidth={(1200 / qwidth + 50).toString() + "px"}
                                     maxListHeight={"200px"}

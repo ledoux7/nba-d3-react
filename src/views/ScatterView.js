@@ -11,7 +11,9 @@ import Dropdown from '../components/Dropdown';
 import MultiDropdown from '../components/MultiDropdown';
 // import Dropdown from '../components/Dropdown';
 
-import Scatterplot from "../graphs/Scatterplot"
+// import Scatterplot from "../graphs/Scatterplot"
+import ScatterPlot from "../graphs/Sc"
+
 // import BarChart from "../graphs/BarChart"
 
 import Datapoint from "../components/Datapoint"
@@ -34,6 +36,15 @@ import DonutChart from "../graphs/DonutChart"
 
 
 const ResponsiveReactGridLayout = WidthProvider(ResponsiveGridLayout );
+
+
+const settings = {
+    width: 400,
+    height: 400,
+    padding: 30,
+    numDataPoints: 30,
+    // maxRange: () => Math.random()  % 100
+  };
 // const originalLayouts = getFromLS("layouts") || {};
 
 
@@ -74,7 +85,7 @@ class Main1 extends Component {
 			displayToolTips: true,
 
 			isToggleOn: true,
-
+            randomData: [],
 
 			left: 0,
 			right: 35,
@@ -191,8 +202,12 @@ class Main1 extends Component {
 
         // .map((p, i) => p.selectedP1 = true);
 
+        // const randomData = d3.range(settings.numDataPoints).map(() => {
+        //     return [Math.floor(Math.random() * settings.maxRange()),  Math.floor(Math.random() * settings.maxRange())];
+        //   });
+        const randomData = [[5,10],[10,17],[25,20]]
 
-		this.setState({ stats: stats, uniqList: uniqList, numberKeys: numberKeys, uniqKeys: uniqKeys, uniqTeams: uniqTeams })
+		this.setState({ stats: stats, uniqList: uniqList, numberKeys: numberKeys, uniqKeys: uniqKeys, uniqTeams: uniqTeams,randomData:randomData })
         
     
     }
@@ -556,14 +571,7 @@ class Main1 extends Component {
 
           return (
             <div style={{ background: '#57667B',color:"white" }}> 
-				<div>
-				<button onClick={this.handleClick} className="white" style={{ "margin-left":"10px"}} >
-                            {/* {this.state.isToggleOn ?  'Scatter': 'Hexbin'} */}
-							{this.state.isToggleOn ?  'Hexbin': 'Scatter'}
-                            
-						</button>
-					
-				</div>
+		
 
 				<ResponsiveReactGridLayout
 					className="layout"
@@ -579,7 +587,7 @@ class Main1 extends Component {
                     preventCollision={false}
 
                     autoSize={true}
-                    containerPadding={[1,1]}
+                    // containerPadding={[1,1]}
                     // margin={[0,0]}
 
 					onLayoutChange={(layout, layouts) =>
@@ -742,12 +750,9 @@ class Main1 extends Component {
 					{/* <h2>P1</h2> */}
                     <h2>BarChart</h2>
                     <div style={{display: 'flex', justifyContent: "center", "margin-left": "20px" }}>
-                        {/* <BarChart 
-                        
-                        data={p2} 
-                        size={[400,250]} 
-                        col={"PTS"}
-                        /> */}
+
+                    <ScatterPlot data={this.state.randomData} {...settings} />
+
                     </div>
 
 

@@ -13,64 +13,84 @@ import sc from '../css/ShotChart.css'
 window.d3_hexbin = {hexbin: hexbin} // workaround library problem
 
 export class ShotChart extends React.Component {
-  static propTypes = {
-    playerId: PropTypes.number,
-    minCount: PropTypes.number,
-    chartType: PropTypes.string,
-    displayToolTips: PropTypes.bool,
-  }
+
+	constructor(props) {
+		super(props)
+		
+		this.state = {
+			prevTotal:-1,
+			charttype: ""
+		}
+
+	}
+	static propTypes = {
+		playerId: PropTypes.number,
+		minCount: PropTypes.number,
+		chartType: PropTypes.string,
+		displayToolTips: PropTypes.bool,
+	  }
+
+	shouldComponentUpdate(nextProps, nextState)
+	{
+		if (this.state.charttype !== nextProps.chartType)
+		{
+			this.setState(
+				{
+					charttype: nextProps.chartType
+				}
+			)
+			
+			return true
+		}
+		else if (nextProps.data.length !==this.state.total)
+		{
+			return true
+		}
+		else
+		{
+			return false
+		}
+	}
+
+  
 
   componentDidUpdate() {
-	console.log("ShotChart ToolTips: ", this.props.displayToolTips)
-	
-		var final_shots =[ 
-			{
-			"x": (226+ 250) / 10,
-			"y": (90 + 50) / 10,
-			"action_type": "Jump Shot",
-			"shot_distance": 24,
-			"FGM":1
-			},
-			{
-	
-				"x": (226+ 250) / 10,
-				"y": (90 + 50) / 10,
-				"action_type": "Jump Shot",
-				"shot_distance": 28,
-				"FGM":1
-				},
-				{
-					"x": (-2+ 250) / 10,
-					"y":  (63 + 50) / 10,
-					"action_type": "Jump Shot",
-					"shot_distance": 6,
-					"FGM":0
-					}
-		]
-	
-	final_shots = this.props.data
-	const namee = this.props.namee
-	
-		// this.props.data
+		console.log("ShotChart ToolTips: ", this.props.displayToolTips)
+		
+			var shotlog = this.props.data
+		
+		// shots 
+		const namee = this.props.namee
+		
+			// this.props.data
 
-	const courtSelection = d3.select("#shot-chart"+namee)
-	// without this line, all updates on court would be ineffect only after changing chartType
-	courtSelection.html('')
-	const chart_court = court().width(this.props.width)
-	const chart_shots = shots()
-						.shotRenderThreshold(this.props.minCount)
-						.displayToolTips(this.props.displayToolTips)
-						.displayType(this.props.chartType)
-	// selection.call always return the selection and not the return value of function passed in
-	courtSelection.call(chart_court)
-	courtSelection.datum(final_shots).call(chart_shots)
-    
-  }
-  render() {
-    return (
-      <div id={"shot-chart"+this.props.namee} className="sc" ></div>
-    );
-  }
+		const courtSelection = d3.select("#shot-chart"+namee)
+		// without this line, all updates on court would be ineffect only after changing chartType
+		courtSelection.html('')
+		const chart_court = court().width(this.props.width)
+		const chart_shots = shots()
+							.shotRenderThreshold(this.props.minCount)
+							.displayToolTips(this.props.displayToolTips)
+							.displayType(this.props.chartType)
+		// selection.call always return the selection and not the return value of function passed in
+		courtSelection.call(chart_court)
+		courtSelection.datum(shotlog).call(chart_shots)
+
+		if (this.state.total !== shotlog.length)
+		{
+			this.setState
+			({
+				 total: shotlog.length,
+				 charttype:this.props.chartType
+			})
+		}
+		
+	}
+	render() {
+		return (
+		<div id={"shot-chart"+this.props.namee} className="sc" ></div>
+		);
+	}
 }
 export default ShotChart
 

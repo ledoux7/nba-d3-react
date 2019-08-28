@@ -55,7 +55,7 @@ class Navigation extends React.Component {
                                         ShotChartOld
                                     </NavLink>
                                     */}
-                                    <NavLink to='/filter'   style={{ color: 'lightgrey',"text-decoration": "none","margin-left":"15px", fontSize:24 }}>
+                                    <NavLink to='/table'   style={{ color: 'lightgrey',"text-decoration": "none","margin-left":"15px", fontSize:24 }}>
                                          Table
                                     </NavLink> 
 

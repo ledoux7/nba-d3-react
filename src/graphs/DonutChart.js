@@ -220,7 +220,8 @@ class Pie extends React.Component {
 	
 					}],
 			// donut: [1,2,3,4],
-			totalSum: 0.001
+			totalSum: 0.001,
+			changed:false
 
 
 		
@@ -279,9 +280,10 @@ class Pie extends React.Component {
 
 			 this.setState({
 				sum: sum,
-				donut: temp
+				donut: temp,
+				changed: true
 			})
-			this.props.forSlice(type,add,"")
+			this.props.forSlice(type,add,"", this.props.arr)
 
 	 
 			// const arr = [type]
@@ -303,6 +305,31 @@ class Pie extends React.Component {
 
 	   
 
+   }
+   shouldComponentUpdate(nextProps, nextState)
+   {
+		// if (nextProps.data.length < 1)
+		// {
+		// 	return true
+		// }
+		// var tsum = nextProps.data.map(item => item.sumShotType).reduce((prev, next) => prev + next)
+		
+	
+		// if ((this.state.totalSum !== tsum) || this.state.changed ===true )
+		// {
+		// 	this.setState(
+		// 		{
+		// 			changed: false
+		// 		}
+		// 	)
+			
+		// 	return true
+		// }
+		// else 
+		// {
+		// 	return false
+		// }
+		return true
    }
    
 
@@ -346,7 +373,7 @@ class Pie extends React.Component {
 	
 					}],
 				});
-				this.props.forSlice("type","add","reset")
+				this.props.forSlice("type","add","reset",this.props.arr)
 				
 
 			}
@@ -424,9 +451,9 @@ class Pie extends React.Component {
   
 class DonutChart extends React.Component {
 
-	inDonut(x, add,reset)
+	inDonut(x, add,reset,arr)
 	{
-		this.props.onSelectedShotType(x,add,reset)
+		this.props.onSelectedShotType(x,add,reset,arr)
 	}
 
 
@@ -455,6 +482,7 @@ class DonutChart extends React.Component {
 				padAngle={.02}
 				data={this.props.data} 
 				forSlice= {this.inDonut.bind(this)}
+				arr={this.props.arr}
 			/>
 				{/* <g>
 				<circle cx="50" cy="55" r="45" fill="none" stroke="#F0CE01" strokeWidth="4" />

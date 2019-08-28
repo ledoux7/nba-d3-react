@@ -14,6 +14,7 @@ function Circle(data){
         return d.count;
     });
     let radiusScale = d3.scaleSqrt().domain([minRadius,maxRadius]).range([5,40]);
+    const tooltip = <text fill="#fff" fontSize="14" className="bubbleChartTooltip" style={{'visibility':'hidden'}}>tooltip</text>
 
     return data.map((circle,index)=>{
         return <circle
