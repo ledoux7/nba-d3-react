@@ -6,5 +6,6 @@ export const CONFIG = {
     // STATS: 'https://gyc027wdca.execute-api.us-west-1.amazonaws.com/players/playerstats'
 
 
+    
 
 };

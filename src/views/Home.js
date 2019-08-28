@@ -10,7 +10,7 @@ import axios from 'axios'
 import MultiDropdown from '../components/MultiDropdown';
 
 // import BarChart from "../graphs/BarChart"
-import {Table} from 'react-bootstrap'
+import { Table } from 'react-bootstrap'
 
 import RangeSlider from "../components/RangeSlider"
 
@@ -56,7 +56,7 @@ class Main1 extends Component {
             displayToolTips: true,
 
             isToggleOn: true,
-            dist: [0,40],
+            dist: [0, 40],
 
 
             left: 0,
@@ -87,7 +87,7 @@ class Main1 extends Component {
 
     setDefault = (shotlog) => {
 
-        shotlog =shotlog.slice(0,1000)
+        shotlog = shotlog.slice(0, 1000)
         shotlog.map(i => i.key = "shotlog");
 
         // shotlog.map((p, i) => {
@@ -166,7 +166,7 @@ class Main1 extends Component {
 
         var dist = shotlog.map(s => (s.SHOT_DIST))
 
-        this.setState({ uniqList: uniqList, uniqShotTypes: uniqShotTypes, uniqTeams: uniqTeams, sumFGA: agg,dist:dist })
+        this.setState({ uniqList: uniqList, uniqShotTypes: uniqShotTypes, uniqTeams: uniqTeams, sumFGA: agg, dist: dist })
 
 
     }
@@ -187,7 +187,7 @@ class Main1 extends Component {
                 // arr[index] = item * 10;
                 if (arr[index].id === id) {
                     temp[index][selCol] = !temp2[index][selCol]
-  
+
                 }
 
             })
@@ -253,16 +253,14 @@ class Main1 extends Component {
         })
     }
 
-    handleShotTypeChange(type, add,reset) 
-    {
-        if (reset === "reset")
-        {
+    handleShotTypeChange(type, add, reset) {
+        if (reset === "reset") {
             this.setState({
                 selShotTypes: []
 
             })
         }
-        
+
         else if (add) {
             this.setState({
                 selShotTypes: this.state.selShotTypes.concat([type])
@@ -286,7 +284,7 @@ class Main1 extends Component {
         // let {margins,data,svgDimensions,onChangeYear,xScale,initialValue, other} = prevProps;
         // let {margins,data,svgDimensions,onChangeYear,xScale,initialValue, other} = this.props;
         if (this.state.isToggleOn === true) {
-        // if (this.state.isToggleOn === false) {
+            // if (this.state.isToggleOn === false) {
 
             this.setState({
                 isToggleOn: !this.state.isToggleOn,
@@ -294,7 +292,7 @@ class Main1 extends Component {
             })
         }
         else if (this.state.isToggleOn === false) {
-        // else if (this.state.isToggleOn === true) {
+            // else if (this.state.isToggleOn === true) {
 
             this.setState({
                 isToggleOn: !this.state.isToggleOn,
@@ -374,8 +372,8 @@ class Main1 extends Component {
     render() {
 
         // const names = this.state.shotlog.map(post => post.firstname)
-        const { fnames, shotlog, uniqList, sumFGA, uniqShotTypes,dist } = this.state
-        
+        const { fnames, shotlog, uniqList, sumFGA, uniqShotTypes, dist } = this.state
+
         var binrange = [1, 20]
 
         // var ab = shotlog.filter((p) => (p["selectedP1"] === true))
@@ -437,7 +435,7 @@ class Main1 extends Component {
 
                 <div>
                     <button onClick={this.handleClick} className="white" style={{ "margin-left": "10px" }} >
-                        {this.state.isToggleOn ?  'Scatter': 'Hexbin'}
+                        {this.state.isToggleOn ? 'Scatter' : 'Hexbin'}
                         {/* {this.state.isToggleOn ? 'Hexbin' : 'Scatter'} */}
 
                     </button>

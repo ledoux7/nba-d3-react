@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 
 import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
-import { WidthProvider} from "react-grid-layout";
+import { WidthProvider } from "react-grid-layout";
 
 import { CONFIG } from '../config.js';
 import * as d3 from "d3";
@@ -20,7 +20,7 @@ import Shotchart from "../graphs/myShotChart"
 import DonutChart from "../graphs/DonutChart"
 
 
-const ResponsiveReactGridLayout = WidthProvider(ResponsiveGridLayout );
+const ResponsiveReactGridLayout = WidthProvider(ResponsiveGridLayout);
 const originalLayouts = getFromLS("layouts") || {};
 
 const format = d3.format(".2f")
@@ -28,69 +28,69 @@ const formatPerc = d3.format(".0%")
 
 class Main1 extends Component {
 
-	constructor(props) {
-		super(props)
-		this.state = {
-			shotlog: [],
-			uniqList: [],
+    constructor(props) {
+        super(props)
+        this.state = {
+            shotlog: [],
+            uniqList: [],
             uniqTeams: [],
 
             uniqShotTypes: [],
-			selShotTypes: [],
+            selShotTypes: [],
             selShotTypes2: [],
-			
-
-			dist:[0,40],
-
-			wholePts: [],
-			wholeAst: [],
-			test: [],
-			response: [],
-			bardata: [12, 25, 6, 6, 9, 10],
-
-			id: "root",
-			error: null,
-			isLoaded: false,
-			fnames: [],
-			// data: d3.range(100).map(_ => [Math.random(), Math.random()]),
-			data: [[0.1, 0.2], [0.3, 0.2], [4, 2], [4, 1]],
-			minCount: 2,
-			chartType: 'scatter' ,//'hexbin', // 'scatter'
-			// chartType: 'hexbin', // 'scatter'
-
-			displayToolTips: true,
-
-			isToggleOn: true,
 
 
-			left: 0,
-			right: 35,
+            dist: [0, 40],
 
-			distL: 0,
-			distR: 35,
+            wholePts: [],
+            wholeAst: [],
+            test: [],
+            response: [],
+            bardata: [12, 25, 6, 6, 9, 10],
 
-			dist2L: 0,
-			dist2R: 35,
+            id: "root",
+            error: null,
+            isLoaded: false,
+            fnames: [],
+            // data: d3.range(100).map(_ => [Math.random(), Math.random()]),
+            data: [[0.1, 0.2], [0.3, 0.2], [4, 2], [4, 1]],
+            minCount: 2,
+            chartType: 'scatter',//'hexbin', // 'scatter'
+            // chartType: 'hexbin', // 'scatter'
 
-		};
-		this.handleClick = this.handleClick.bind(this);
+            displayToolTips: true,
 
-	}
-
+            isToggleOn: true,
 
 
-	componentDidMount() {
+            left: 0,
+            right: 35,
 
-		const racesRequest = axios.get(CONFIG.SHOTS)
-			.then(response =>
-				response.data
-			).then(shotlog => this.setDefault(shotlog))
+            distL: 0,
+            distR: 35,
 
-	}
+            dist2L: 0,
+            dist2R: 35,
 
-	setDefault = (shotlog) => {
+        };
+        this.handleClick = this.handleClick.bind(this);
 
-		// shotlog =shotlog.slice(0,450)
+    }
+
+
+
+    componentDidMount() {
+
+        const racesRequest = axios.get(CONFIG.SHOTS)
+            .then(response =>
+                response.data
+            ).then(shotlog => this.setDefault(shotlog))
+
+    }
+
+    setDefault = (shotlog) => {
+
+        // shotlog =shotlog.slice(0,450)
         shotlog.map(i => i.key = "shotlog");
 
         // shotlog.map((p, i) => {
@@ -168,22 +168,22 @@ class Main1 extends Component {
             key: "uniqTeams"
         }))
 
-		var dist = shotlog.map(s => (s.SHOT_DIST))
-		
-		uniqList.map((p, i) => {
-			if (p.option === "James Harden") { p["selectedP1"] = true; }
-		})
-		uniqList.map((p, i) => {
-			if (p.option === "Pascal Siakam") { p["selectedP2"] = true; }
-		})
+        var dist = shotlog.map(s => (s.SHOT_DIST))
+
+        uniqList.map((p, i) => {
+            if (p.option === "James Harden") { p["selectedP1"] = true; }
+        })
+        uniqList.map((p, i) => {
+            if (p.option === "Pascal Siakam") { p["selectedP2"] = true; }
+        })
 
 
-        this.setState({ uniqList: uniqList, uniqShotTypes: uniqShotTypes, uniqTeams: uniqTeams, sumFGA: agg,dist:dist })
+        this.setState({ uniqList: uniqList, uniqShotTypes: uniqShotTypes, uniqTeams: uniqTeams, sumFGA: agg, dist: dist })
 
-	}
+    }
 
 
-	toggleSelected = (id, key, uniqList, listid, selCol, singleMode) => {
+    toggleSelected = (id, key, uniqList, listid, selCol, singleMode) => {
         if (singleMode) {
             // deep copy
             let temp = JSON.parse(JSON.stringify(this.state[key]))
@@ -231,133 +231,128 @@ class Main1 extends Component {
 
     }
 
-	handleDistChange(x, y) {
-		this.setState({
-			distL: x,
-			distR: y
+    handleDistChange(x, y) {
+        this.setState({
+            distL: x,
+            distR: y
 
-		})
-	}
-	handleDistChange2(x, y) {
-		this.setState({
-			dist2L: x,
-			dist2R: y
+        })
+    }
+    handleDistChange2(x, y) {
+        this.setState({
+            dist2L: x,
+            dist2R: y
 
-		})
-	}
-	handleChangeYear1(year1, year2) {
-		this.setState({
-			left2: year1,
-			right2: year2,
+        })
+    }
+    handleChangeYear1(year1, year2) {
+        this.setState({
+            left2: year1,
+            right2: year2,
 
-		})
-	}
+        })
+    }
 
-	handleMinDist(x) {
-		this.setState({
-			left: x,
+    handleMinDist(x) {
+        this.setState({
+            left: x,
 
-		})
-	}
+        })
+    }
 
-	handleBinChange(x) {
-		this.setState({
-			minCount: x
-		})
-	}
-	handleClick() {
-		// let {margins,data,svgDimensions,onChangeYear,xScale,initialValue, other} = prevProps;
-		// let {margins,data,svgDimensions,onChangeYear,xScale,initialValue, other} = this.props;
-		// if (this.state.isToggleOn === true) {
-		if (this.state.isToggleOn === false) {
+    handleBinChange(x) {
+        this.setState({
+            minCount: x
+        })
+    }
+    handleClick() {
+        // let {margins,data,svgDimensions,onChangeYear,xScale,initialValue, other} = prevProps;
+        // let {margins,data,svgDimensions,onChangeYear,xScale,initialValue, other} = this.props;
+        // if (this.state.isToggleOn === true) {
+        if (this.state.isToggleOn === false) {
 
-			this.setState({
-				isToggleOn: !this.state.isToggleOn,
-				chartType: 'scatter'
-			})
-		}
-		// else if (this.state.isToggleOn === false) {
-		else if (this.state.isToggleOn === true) {
+            this.setState({
+                isToggleOn: !this.state.isToggleOn,
+                chartType: 'scatter'
+            })
+        }
+        // else if (this.state.isToggleOn === false) {
+        else if (this.state.isToggleOn === true) {
 
-			this.setState({
-				isToggleOn: !this.state.isToggleOn,
-				chartType: 'hexbin'
+            this.setState({
+                isToggleOn: !this.state.isToggleOn,
+                chartType: 'hexbin'
 
-			})
-		}
-
-
-
-
-	}
-	
-	handleShotTypeChange(type, add,reset,arr) 
-    {
-
-		if (arr === "selShotTypes")
-		{
-			if (reset === "reset")
-			{
-				this.setState({
-					selShotTypes: []
-	
-				})
-			}
-			
-			else if (add) {
-				this.setState({
-					selShotTypes: this.state.selShotTypes.concat([type])
-	
-				})
-			}
-			else {
-				this.setState({
-					selShotTypes: this.state.selShotTypes.filter((ele, i) => ele !== type)
-				})
-	
-			}
-		}
-		
-		
-		else if (arr === "selShotTypes2")
-		{
-			if (reset === "reset")
-			{
-				this.setState({
-					selShotTypes2: []
-	
-				})
-			}
-			
-			else if (add) {
-				this.setState({
-					selShotTypes2: this.state.selShotTypes2.concat([type])
-	
-				})
-			}
-			else {
-				this.setState({
-					selShotTypes2: this.state.selShotTypes2.filter((ele, i) => ele !== type)
-				})
-	
-			}
-		}
+            })
+        }
 
 
 
 
     }
-    
+
+    handleShotTypeChange(type, add, reset, arr) {
+
+        if (arr === "selShotTypes") {
+            if (reset === "reset") {
+                this.setState({
+                    selShotTypes: []
+
+                })
+            }
+
+            else if (add) {
+                this.setState({
+                    selShotTypes: this.state.selShotTypes.concat([type])
+
+                })
+            }
+            else {
+                this.setState({
+                    selShotTypes: this.state.selShotTypes.filter((ele, i) => ele !== type)
+                })
+
+            }
+        }
+
+
+        else if (arr === "selShotTypes2") {
+            if (reset === "reset") {
+                this.setState({
+                    selShotTypes2: []
+
+                })
+            }
+
+            else if (add) {
+                this.setState({
+                    selShotTypes2: this.state.selShotTypes2.concat([type])
+
+                })
+            }
+            else {
+                this.setState({
+                    selShotTypes2: this.state.selShotTypes2.filter((ele, i) => ele !== type)
+                })
+
+            }
+        }
+
+
+
+
+    }
+
     resetLayout() {
         this.setState({ layouts: {} });
-      }
-    
-      onLayoutChange(layout, layouts) {
+    }
+
+    onLayoutChange(layout, layouts) {
         saveToLS("layouts", layouts);
         this.setState({ layouts });
-	  }
-	  
-	  filterSelected(df, uniqList, selCol, col) {
+    }
+
+    filterSelected(df, uniqList, selCol, col) {
         if (uniqList.filter(t => t[selCol] === true).length > 0) {
             var selPlayer = uniqList.filter(t => t[selCol] === true).map(t => t.option)
             df = df.filter((shot, index) => selPlayer.includes(shot[col]))
@@ -367,12 +362,12 @@ class Main1 extends Component {
         return df
     }
 
-    filterShotLog(df,selCol,selCol2) {
+    filterShotLog(df, selCol, selCol2) {
         // var df = shotlog
         df = this.filterSelected(df, this.state.uniqList, selCol, "PLAYER_NAME")
 
 
-        df = this.filterSelected(df, this.state.uniqTeams,selCol2, "TEAM")
+        df = this.filterSelected(df, this.state.uniqTeams, selCol2, "TEAM")
 
 
 
@@ -407,25 +402,25 @@ class Main1 extends Component {
         return agg
     }
 
-    
-
-
-	render() {
-
-        const { fnames, shotlog, uniqList, sumFGA, uniqShotTypes,dist } = this.state
 
 
 
-		let temp = JSON.parse(JSON.stringify(this.state.shotlog))
-		let temp2 = JSON.parse(JSON.stringify(this.state.shotlog))
+    render() {
+
+        const { fnames, shotlog, uniqList, sumFGA, uniqShotTypes, dist } = this.state
 
 
-		var p1 = this.filterShotLog(temp,"selectedP1","selectedP1")
+
+        let temp = JSON.parse(JSON.stringify(this.state.shotlog))
+        let temp2 = JSON.parse(JSON.stringify(this.state.shotlog))
+
+
+        var p1 = this.filterShotLog(temp, "selectedP1", "selectedP1")
 
         p1 = p1.filter((p) => (p.SHOT_DIST >= this.state.distL) && (p.SHOT_DIST <= this.state.distR))
 
         // var agg = this.aggregate(ab, uniqShotTypes, "SHOT_TYPE", "FGA")
-		var agg = this.aggregate(p1, uniqShotTypes, "SHOT_TYPE", "FGA")
+        var agg = this.aggregate(p1, uniqShotTypes, "SHOT_TYPE", "FGA")
 
         if (this.state.selShotTypes.length > 0) {
             p1 = p1.filter((shot, index) => this.state.selShotTypes.includes(shot.SHOT_TYPE))
@@ -433,27 +428,27 @@ class Main1 extends Component {
         }
 
 
-  
-		// deff = shotlog.filter((p) => (p["selectedP2"] === true))
-		var p2 = this.filterShotLog(temp2,"selectedP2","selectedP2")
 
-		p2 = p2.filter((p) => (p.SHOT_DIST >= this.state.dist2L) && (p.SHOT_DIST <= this.state.dist2R))
-		
-		var agg2 = this.aggregate(p2, uniqShotTypes, "SHOT_TYPE", "FGA")
-		
-		if (this.state.selShotTypes2.length > 0) {
+        // deff = shotlog.filter((p) => (p["selectedP2"] === true))
+        var p2 = this.filterShotLog(temp2, "selectedP2", "selectedP2")
+
+        p2 = p2.filter((p) => (p.SHOT_DIST >= this.state.dist2L) && (p.SHOT_DIST <= this.state.dist2R))
+
+        var agg2 = this.aggregate(p2, uniqShotTypes, "SHOT_TYPE", "FGA")
+
+        if (this.state.selShotTypes2.length > 0) {
             p2 = p2.filter((shot, index) => this.state.selShotTypes2.includes(shot.SHOT_TYPE))
             // ab = ab.slice(0,6)
         }
 
 
 
-		var binrange = [1, 20]
+        var binrange = [1, 20]
 
-		var testt = [0,124,300]
+        var testt = [0, 124, 300]
 
-		
-		var r1h = 8
+
+        var r1h = 8
         var r2h = 10
         var fullwidth = 12
         var halfwidth = fullwidth / 2
@@ -462,13 +457,13 @@ class Main1 extends Component {
 
 
 
-		return (
+        return (
             <div style={{ background: '#57667B', color: "white" }}>
                 {/* // <div >  */}
 
                 <div>
                     <button onClick={this.handleClick} className="white" style={{ "margin-left": "10px" }} >
-                        {this.state.isToggleOn ?  'Scatter': 'Hexbin'}
+                        {this.state.isToggleOn ? 'Scatter' : 'Hexbin'}
                         {/* {this.state.isToggleOn ? 'Hexbin' : 'Scatter'} */}
 
                     </button>
@@ -583,33 +578,33 @@ class Main1 extends Component {
 
 
                     <div key="3" style={{ background: '#455162' }} data-grid={{ w: qwidth, h: r1h, x: halfwidth, y: 0, minW: 2, minH: 1, static: true }}>
-						<h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px" }}>
-								Player
+                        <h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px" }}>
+                            Player
 						</h2>
-							<div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px", "margin-top": "10px" }}>
-								<div style={{ color: "black" }}>
+                        <div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px", "margin-top": "10px" }}>
+                            <div style={{ color: "black" }}>
 
-									<MultiDropdown
-										titleHelper="Player"
-										title="Select Players"
-										col="PLAYER_NAME"
-										uid="PLAYER_ID"
-										selCol={"selectedP2"}
+                                <MultiDropdown
+                                    titleHelper="Player"
+                                    title="Select Players"
+                                    col="PLAYER_NAME"
+                                    uid="PLAYER_ID"
+                                    selCol={"selectedP2"}
 
-										list={this.state.uniqList}
-										uniqList={uniqList}
-										toggleItem={this.toggleSelected}
+                                    list={this.state.uniqList}
+                                    uniqList={uniqList}
+                                    toggleItem={this.toggleSelected}
 
-										// singleMode={false}
-										singleMode={true}
+                                    // singleMode={false}
+                                    singleMode={true}
 
-										maxwidth={(1200 / qwidth + 50).toString() + "px"}
-										maxListHeight={"170px"}
-									/>
-								</div>
+                                    maxwidth={(1200 / qwidth + 50).toString() + "px"}
+                                    maxListHeight={"170px"}
+                                />
+                            </div>
 
-								{/* {wholePts} */}
-							</div>
+                            {/* {wholePts} */}
+                        </div>
                         <h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px", "margin-top": "10px" }}>
                             Distance
 					</h2>
@@ -637,37 +632,37 @@ class Main1 extends Component {
 
                     </div>
 
-					<div key="4" style={{ background: '#455162' }} data-grid={{ w: qwidth, h: r1h, x: halfwidth+qwidth, y: 0, minW: 2, minH: 1, static: true }}>
-						<h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px" }}>
-								Teams
+                    <div key="4" style={{ background: '#455162' }} data-grid={{ w: qwidth, h: r1h, x: halfwidth + qwidth, y: 0, minW: 2, minH: 1, static: true }}>
+                        <h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px" }}>
+                            Teams
 						</h2>
-						<div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px", "margin-top": "10px" }}>
-								<div style={{ color: "black" }}>
+                        <div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px", "margin-top": "10px" }}>
+                            <div style={{ color: "black" }}>
 
-									<MultiDropdown
-										titleHelper="Teams"
-										title="Select Teams"
-										col="PLAYER_NAME"
-										uid="PLAYER_ID"
-										selCol={"selectedP2"}
+                                <MultiDropdown
+                                    titleHelper="Teams"
+                                    title="Select Teams"
+                                    col="PLAYER_NAME"
+                                    uid="PLAYER_ID"
+                                    selCol={"selectedP2"}
 
-										list={this.state.uniqTeams}
-										uniqList={this.state.uniqTeams}
-										toggleItem={this.toggleSelected}
+                                    list={this.state.uniqTeams}
+                                    uniqList={this.state.uniqTeams}
+                                    toggleItem={this.toggleSelected}
 
-										// singleMode={false}
-										singleMode={true}
+                                    // singleMode={false}
+                                    singleMode={true}
 
-										maxwidth={(1200 / qwidth + 50).toString() + "px"}
-										maxListHeight={"170px"}
-									/>
-								</div>
-							</div>
+                                    maxwidth={(1200 / qwidth + 50).toString() + "px"}
+                                    maxListHeight={"170px"}
+                                />
+                            </div>
+                        </div>
 
-					</div>
+                    </div>
 
                     <div key="5" style={{ background: '#455162' }} data-grid={{ w: qwidth, h: 12, x: 0, y: r1h, minW: 2, minH: 1, static: true }}>
-						<h2>P1</h2>
+                        <h2>P1</h2>
                         {/* <div style={{display: 'flex', justifyContent: "center", "margin-left": "0px", background: '#135162' }}> */}
                         <Shotchart
                             data={p1}
@@ -681,19 +676,19 @@ class Main1 extends Component {
                         />
                     </div>
                     <div key="6" style={{ background: '#455162', }} data-grid={{ w: qwidth, h: 12, x: qwidth, y: r1h, minW: 2, minH: 1, static: true }}>
-						<DonutChart
+                        <DonutChart
 
-						data={agg}
-						onSelectedShotType={this.handleShotTypeChange.bind(this)}
-						arr={"selShotTypes"}
-						/>
+                            data={agg}
+                            onSelectedShotType={this.handleShotTypeChange.bind(this)}
+                            arr={"selShotTypes"}
+                        />
 
 
 
                     </div>
-                    <div key="7" style={{ background: '#455162' }} data-grid={{ w: qwidth, h: 12, x: halfwidth, y: r1h, minW: 2, minH: 1 ,static: true}}>
-                        
-						<Shotchart
+                    <div key="7" style={{ background: '#455162' }} data-grid={{ w: qwidth, h: 12, x: halfwidth, y: r1h, minW: 2, minH: 1, static: true }}>
+
+                        <Shotchart
                             data={p2}
                             //  xdata={xloc} ydata={yloc}
                             playerId={this.props.playerId}
@@ -707,23 +702,23 @@ class Main1 extends Component {
 
 
                     </div>
-					<div key="8" style={{ background: '#455162' }} data-grid={{ w: qwidth, h: 12, x: halfwidth+qwidth, y: r1h, minW: 2, minH: 1,static: true }}>
-                        
-					<DonutChart
+                    <div key="8" style={{ background: '#455162' }} data-grid={{ w: qwidth, h: 12, x: halfwidth + qwidth, y: r1h, minW: 2, minH: 1, static: true }}>
 
-						data={agg2}
-						onSelectedShotType={this.handleShotTypeChange.bind(this)}
-						arr={"selShotTypes2"}
-						/>
+                        <DonutChart
+
+                            data={agg2}
+                            onSelectedShotType={this.handleShotTypeChange.bind(this)}
+                            arr={"selShotTypes2"}
+                        />
 
 
 
                     </div>
 
 
-                    <div key="9" style={{ background: '#455162' }} data-grid={{ w: qwidth, h: 20, x: 0, y: r1h + 24, minW: 2, minH: 1 ,static: true}}>
+                    <div key="9" style={{ background: '#455162' }} data-grid={{ w: qwidth, h: 20, x: 0, y: r1h + 24, minW: 2, minH: 1, static: true }}>
                         <h2>P1</h2>
-						
+
 
 
 
@@ -744,7 +739,7 @@ class Main1 extends Component {
         );
 
 
-	}
+    }
 
 }
 
@@ -753,22 +748,22 @@ export default Main1;
 function getFromLS(key) {
     let ls = {};
     if (global.localStorage) {
-      try {
-        ls = JSON.parse(global.localStorage.getItem("rgl-8")) || {};
-      } catch (e) {
-        /*Ignore*/
-      }
+        try {
+            ls = JSON.parse(global.localStorage.getItem("rgl-8")) || {};
+        } catch (e) {
+            /*Ignore*/
+        }
     }
     return ls[key];
-  }
-  
-  function saveToLS(key, value) {
+}
+
+function saveToLS(key, value) {
     if (global.localStorage) {
-      global.localStorage.setItem(
-        "rgl-8",
-        JSON.stringify({
-          [key]: value
-        })
-      );
+        global.localStorage.setItem(
+            "rgl-8",
+            JSON.stringify({
+                [key]: value
+            })
+        );
     }
-  }
+}
