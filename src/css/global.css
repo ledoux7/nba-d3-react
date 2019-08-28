@@ -258,6 +258,8 @@ display: block;
           user-select: none;
   position: relative;
   min-width:220px;
+  
+
   padding:0px;
   /* margin-left: 10px */
 }
@@ -303,7 +305,7 @@ display: block;
           box-shadow: 0 2px 5px -1px #e8e8e8;
   font-weight: 650;
   padding: 15px 0;
-  max-height: 215px;
+  max-height: 160px;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 }

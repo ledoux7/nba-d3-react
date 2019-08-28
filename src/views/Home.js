@@ -45,6 +45,8 @@ class Main1 extends Component {
 		this.state = {
 			shotlog: [],
             uniqList: [],
+            uniqTeams: [],
+
             uniqShotTypes: [],
             selShotTypes:[],
             // selShotTypes:["Jump Shot", "Step Back Jump shot" ,"Running Jump shot","Pullup Jump shot","Driving Layup"],
@@ -148,7 +150,6 @@ class Main1 extends Component {
 
 		uniqList.map((p, i) => p.listid = i);
 
-        this.setState({ uniqList: uniqList, uniqShotTypes: uniqShotTypes })
 
 
         var agg = []
@@ -161,8 +162,22 @@ class Main1 extends Component {
         
         })
 
-        this.setState({ sumFGA: agg})
+        // this.setState({ sumFGA: agg})
+
+        var uniqTeams = [...new Set(shotlog.map(d => d.TEAM))]
+
+        uniqTeams = uniqTeams.map((k, index) => ({
+			option: k,
+            id: index,
+            listid: index,
+			// selectedP1: true,
+            // selectedP2: true,
+            selectedP1: false,
+			selectedP2: false,
+			key: "uniqTeams"
+        }))
         
+        this.setState({ uniqList: uniqList, uniqShotTypes: uniqShotTypes, uniqTeams:uniqTeams,sumFGA: agg })
 
 
 	}
@@ -186,25 +201,68 @@ class Main1 extends Component {
 	}
 
 
-    toggleSelected = (id, key,uniqList,listid,selCol) => 
+    toggleSelected = (id, key,uniqList,listid,selCol, singleMode) => 
     {
-        // deep copy
-		let temp = JSON.parse(JSON.stringify(this.state[key]))
+        if (singleMode)
+                    {
+            // deep copy
+            let temp = JSON.parse(JSON.stringify(this.state[key]))
+            let temp2 = JSON.parse(JSON.stringify(this.state[key]))
 
-		temp.forEach(function myFunction(item, index, arr) {
-			// arr[index] = item * 10;
-			if (arr[index].id === id) {
-				// temp[index].selected = !temp[index].selected
-				temp[index][selCol]= !temp[index][selCol]
+            
+            temp.map(d => d[selCol] = false)
+            uniqList.map(d => d[selCol] = false)
 
-			}
 
-		})
-		uniqList[listid][selCol] = !uniqList[listid][selCol]
-		this.setState({
-			[key]: temp
-		})
-	}
+            temp.forEach(function myFunction(item, index, arr) {
+                // arr[index] = item * 10;
+                if (arr[index].id === id) {
+                    // temp[index].selected = !temp[index].selected
+                    temp[index][selCol]= !temp2[index][selCol]
+                    // temp[index][selCol]= !this.state[key][index][selCol]
+
+                    
+                    // temp[index][selCol]= !temp2[key][index][selCol]
+                    // temp[index][selCol]= true;
+                    
+
+                }
+
+            })
+            uniqList[listid][selCol] = !uniqList[listid][selCol]
+            
+            // uniqList[listid][selCol] = true; // !uniqList[listid][selCol]
+            this.setState({
+                [key]: temp,
+                // uniqList: uniqList
+            })
+
+                            
+        }
+
+
+        else
+        {
+         // deep copy
+         let temp = JSON.parse(JSON.stringify(this.state[key]))
+
+         temp.forEach(function myFunction(item, index, arr) {
+             // arr[index] = item * 10;
+             if (arr[index].id === id) {
+                 // temp[index].selected = !temp[index].selected
+                 temp[index][selCol]= !temp[index][selCol]
+
+             }
+
+         })
+         uniqList[listid][selCol] = !uniqList[listid][selCol]
+         this.setState({
+             [key]: temp
+         })
+
+        }
+        
+    }
 
 	handleDistChange(x, y) {
 		this.setState({
@@ -294,25 +352,32 @@ class Main1 extends Component {
 
 		// const names = this.state.shotlog.map(post => post.firstname)
 		const { fnames, shotlog, uniqList , sumFGA, uniqShotTypes} = this.state
+		var dist = shotlog.map(post => (post.SHOT_DIST))
+		var binrange = [1, 20]
 
-		var ab = shotlog.filter((p) => (p["selectedP1"] === true))
+        // var ab = shotlog.filter((p) => (p["selectedP1"] === true))
+        // ab = ab.filter((p) => (p["selectedP1"] === true))
+        
+        var ab = shotlog
+        
+        if (this.state.uniqList.filter(t =>t.selectedP1 === true).length > 0)
+        {
+            var selPlayer = this.state.uniqList.filter(t =>t.selectedP1 === true).map(t =>t.option)
+            ab = ab.filter((shot, index)=>  selPlayer.includes(shot.PLAYER_NAME))
+            // ab = ab.slice(0,6)
+        }
 
+
+        if (this.state.uniqTeams.filter(t =>t.selectedP1 === true).length > 0)
+        {
+            var selTeams = this.state.uniqTeams.filter(t =>t.selectedP1 === true).map(t =>t.option)
+            ab = ab.filter((shot, index)=>  selTeams.includes(shot.TEAM))
+            // ab = ab.slice(0,6)
+        }
 
 		ab = ab.filter((p) => (p.SHOT_DIST >= this.state.distL) && (p.SHOT_DIST <= this.state.distR))
 
 
-		var dist = shotlog.map(post => (post.SHOT_DIST))
-		var wholeAst = shotlog.map(p => ((p.LOC_X+250)/10))
-		var wholePts = shotlog.map(p => (p.LOC_Y+50)/10)
-
-
-		var xloc = ab.map(post => (post.LOC_X))
-		var yloc = ab.map(post => (post.LOC_Y))
-
-
-		var binrange = [1, 20]
-
-		var testt = [0,124,300]
 
 		
 		var r1h = 8
@@ -321,6 +386,8 @@ class Main1 extends Component {
         var halfwidth = fullwidth/2
         var qwidth = halfwidth/2
         var colsize = 12
+
+
 
 
         // var gh = ab.map(post => (post.id))
@@ -361,6 +428,8 @@ class Main1 extends Component {
             ab = ab.filter((shot, index)=>  this.state.selShotTypes.includes(shot.SHOT_TYPE))
             // abc = abc.slice(0,6)
         }
+
+
 
         if (ab.length > 0)
         {
@@ -426,15 +495,18 @@ class Main1 extends Component {
 					rowHeight={30}
                     layouts={this.state.layouts}
                     margin={[10,10]}
-                    // verticalCompact={true}
-                    horizontalCompact={true}
+                    verticalCompact={false}
+                    horizontalCompact={false}
                     preventCollision={false}
+
+                    autoSize={true}
+                    // containerPadding={[1,1]}
 
 					onLayoutChange={(layout, layouts) =>
 					this.onLayoutChange(layout, layouts)
 					}
               	>
-                <div key="1" style={{ background: '#455162' }} data-grid={{ w: halfwidth, h: r1h, x: 0, y: 0, minW: 2, minH: 1, static: true  }}>
+                <div key="1" style={{ background: '#455162' }} data-grid={{ w: qwidth, h: r1h, x: 0, y: 0, minW: 2, minH: 1, static: true  }}>
 					
 					
 					<h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px" }}>
@@ -452,7 +524,13 @@ class Main1 extends Component {
 
 							list={this.state.shotlog}
 							uniqList={uniqList}
-							toggleItem={this.toggleSelected}
+                            toggleItem={this.toggleSelected}
+                            
+                            singleMode={false}
+                            // singleMode={true}
+
+                            maxwidth={(1200/qwidth+50).toString() +"px"}
+                            maxListHeight={"170px"}
 						/>
 						</div>
 						
@@ -465,34 +543,65 @@ class Main1 extends Component {
 						<div>
 
 						<RangeSlider onChangeYear={this.handleDistChange.bind(this)}
-						data={dist} 
-						handle1={"handle3"}
-						handle2={"handle4"}
-						sGroup={"test"}
-						label={"Distance"}
+                            data={dist} 
+                            handle1={"handle3"}
+                            handle2={"handle4"}
+                            sGroup={"test"}
+                            label={"Distance"}
 
-						left={this.state.distL}
-						right={this.state.distR}
-						width={500}
-						height={150}
-					/>
+                            left={this.state.distL}
+                            right={this.state.distR}
+                            width={460}
+                            height={50}
+                        />
 						</div>
 						
 						{/* {wholePts} */}
 					</div>
 
                 </div>
+                <div key="2" style={{ background: '#455162' }} data-grid={{ w: qwidth, h: r1h, x: qwidth, y: 0, minW: 2, minH: 1, static: true  }}>
+					
+					
+					<h2 style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px" }}>
+						Teams
+					</h2>
+					<div className="asd" style={{ display: 'flex', justifyContent: "flex-start", "margin-left": "10px", "margin-top": "10px"  }}>  
+						<div style={{color:"black" }}>
+
+						<MultiDropdown
+							titleHelper="Teams"
+							title="Select Teams"
+							col="TEAM_NAME"
+							uid="TEAM_NAME"
+							selCol={"selectedP1"}
+
+							list={this.state.uniqTeams}
+							uniqList={this.state.uniqTeams}
+                            toggleItem={this.toggleSelected}
+                            
+                            // singleMode={false}
+                            singleMode={true}
+
+                            maxwidth={(1200/qwidth+50).toString() +"px"}
+                            maxListHeight={"200px"}
+						/>
+						</div>
+						
+						{/* {wholePts} */}
+					</div>
+                </div>
       
       
       
-                <div key="2" style={{ background: '#455162' }} data-grid={{ w: halfwidth, h: r1h, x: halfwidth, y: 0, minW: 2, minH: 1, static: true  }}>
+                <div key="3" style={{ background: '#455162' }} data-grid={{ w: halfwidth, h: r1h, x: halfwidth, y: 0, minW: 2, minH: 1, static: true  }}>
                 
       
 
 
       			</div>
 
-				<div  key="3" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:7 , x: 0, y: r1h, minW: 2, minH: 1, static: false}}>
+				<div  key="4" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:7 , x: 0, y: r1h, minW: 2, minH: 1, static: false}}>
 					{/* <h2>P1</h2> */}
 
                     {/* <FeatureFour data={[5,10,1,3]} size={[500,500]}/>  */}
@@ -598,7 +707,7 @@ class Main1 extends Component {
 
 
 				</div>
-				<div  key="4" style={{ background: '#455162', }} data-grid={{ w: qwidth, h:12 , x: qwidth, y: r1h, minW: 2, minH: 1, static: false}}>
+				<div  key="5" style={{ background: '#455162', }} data-grid={{ w: qwidth, h:12 , x: qwidth, y: r1h, minW: 2, minH: 1, static: false}}>
 					<h2>Donut</h2>
                     {/* <BarChart  data={piedata} size={[200, 200] }/> display: "block","margin":"auto" */}
                     
@@ -616,7 +725,7 @@ class Main1 extends Component {
 
 
 				</div>
-                <div  key="5" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:12 , x: halfwidth , y: r1h, minW: 2, minH: 1 }}>
+                <div  key="6" style={{ background: '#455162' }} data-grid={{ w: qwidth, h:12 , x: halfwidth , y: r1h, minW: 2, minH: 1 }}>
 					<h2>P1</h2>
 					{/* <div style={{display: 'flex', justifyContent: "center", "margin-left": "0px", background: '#135162' }}> */}
 					<Shotchart 

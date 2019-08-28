@@ -478,6 +478,8 @@ class Main1 extends Component {
                     horizontalCompact={true}
                     preventCollision={false}
 
+                    // autoSize={true}
+
 					onLayoutChange={(layout, layouts) =>
 					this.onLayoutChange(layout, layouts)
 					}
