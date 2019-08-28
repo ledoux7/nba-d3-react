@@ -170,6 +170,11 @@ class Main1 extends Component {
 			key: "uniqTeams"
         }))
 
+
+        uniqKeys.map((p, i) => {
+			if (p.option === "PTS") { p["selectedP1"] = true; }
+		})
+
         // uniqTeams = uniqTeams.filter((item, index) => uniqIds.includes(item.id))
 		// // uniqList = uniqList.filter((item,index)=> uniqList.id.indexOf(item.id)===index)                                           
 		// uniqTeams = uniqTeams.filter((uniqTeams, index, self) =>
@@ -677,7 +682,7 @@ class Main1 extends Component {
 							title="Select Category"
 							col="PLAYER_NAME"
 							uid="PLAYER_ID"
-							selCol={"selectedP2"}
+							selCol={"selectedP1"}
 
 							list={this.state.uniqKeys}
                             uniqList={this.state.uniqKeys}
@@ -696,8 +701,8 @@ class Main1 extends Component {
 
                 <div>
                 {
-                    this.state.uniqKeys.filter(k => k["selectedP2"]=== true).length > 0  ? (
-                            <BarChart       data={this.state.stats}    size={[400,250]}   col={this.state.uniqKeys.filter(k => k["selectedP2"])[0].option} />
+                    this.state.uniqKeys.filter(k => k["selectedP1"]=== true).length > 0  ? (
+                            <BarChart       data={this.state.stats}    size={[400,250]}   col={this.state.uniqKeys.filter(k => k["selectedP1"])[0].option} />
                     ) : (
                          ""
                 )}

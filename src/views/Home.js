@@ -291,8 +291,17 @@ class Main1 extends Component {
         })
     }
 
-    handleShotTypeChange(type, add) {
-        if (add) {
+    handleShotTypeChange(type, add,reset) 
+    {
+        if (reset === "reset")
+        {
+            this.setState({
+                selShotTypes: []
+
+            })
+        }
+        
+        else if (add) {
             this.setState({
                 selShotTypes: this.state.selShotTypes.concat([type])
 

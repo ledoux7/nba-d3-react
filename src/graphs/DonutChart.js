@@ -120,6 +120,40 @@ class Slice extends React.Component {
 
 		}
 	}
+	componentWillUpdate()
+	{
+		let {value,piece, label, fill, innerRadius = 0, outerRadius, cornerRadius, padAngle, ...props} = this.props;
+
+		if ((piece !== this.state.prevPiece) && (this.state.prevPiece !== -1 ) && (this.state.isSelected === true) )
+		{
+			if ((label === this.state.prevLabel) )
+			{
+				this.setState({
+					prevPiece: piece,
+					prevLabel:label
+				});
+				this.props.func(piece,label, 1)
+			}
+			else
+			{
+				if (this.state.touched ===true)
+				{
+					this.setState({
+						isSelected: false,
+						// isClicked: false,
+						// isSelected: false,
+						// isHovered: false,
+						touched:false
+	
+					});
+				}
+				
+
+
+			}
+			
+		}
+	}
 
 	render() 
 	{
@@ -140,31 +174,7 @@ class Slice extends React.Component {
 
 		// }
 
-		if ((piece !== this.state.prevPiece) && (this.state.prevPiece !== -1 ) && (this.state.isSelected === true) )
-		{
-			if ((label === this.state.prevLabel) )
-			{
-				this.setState({
-					prevPiece: piece,
-					prevLabel:label
-				});
-				this.props.func(piece,label, 1)
-			}
-			else
-			{
-				this.setState({
-					// isSelected: false,
-					// isClicked: false,
-					// isSelected: false,
-					// isHovered: false,
-					touched:false
-
-				});
-				// this.props.func(piece,label, 1)
-
-			}
-			
-		}
+		
 		
 		return (
 		<g 
@@ -271,7 +281,7 @@ class Pie extends React.Component {
 				sum: sum,
 				donut: temp
 			})
-			this.props.forSlice(type,add)
+			this.props.forSlice(type,add,"")
 
 	 
 			// const arr = [type]
@@ -336,6 +346,8 @@ class Pie extends React.Component {
 	
 					}],
 				});
+				this.props.forSlice("type","add","reset")
+				
 
 			}
 			
@@ -412,9 +424,9 @@ class Pie extends React.Component {
   
 class DonutChart extends React.Component {
 
-	inDonut(x, add)
+	inDonut(x, add,reset)
 	{
-		this.props.onSelectedShotType(x,add)
+		this.props.onSelectedShotType(x,add,reset)
 	}
 
 
